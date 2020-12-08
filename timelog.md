@@ -13,18 +13,18 @@
 * *0.5 hour* Created GitLab repository and cloned the cookiecutter for the projects
 * *1 hour* Modified dissertation template, compiled  
 
-## 30 Sep 2020
+### 30 Sep 2020
 
 * *2 hours* General project familiarization
 
 
 ## Week 2
 
-## 5 Oct 2020
+### 5 Oct 2020
 
 * *2 hours* PRISM tutorials
 
-## 7 Oct 2020
+### 7 Oct 2020
 
 * *2 hours* PRISM tutorials
 
@@ -34,18 +34,18 @@
 
 * *0.5 hour* Project supervisor meeting
 
-## 14 Oct 2020
+### 14 Oct 2020
 
 * *2 hours* PRISM tutorials
 
-## 16 Oct 2020
+### 16 Oct 2020
 
 * *2 hours* PRISM tutorials
 
 
 ## Week 4
 
-## 20 Oct 2020
+### 20 Oct 2020
 
 * *1 hour* Pokemon modelling brainstorming
 
@@ -64,7 +64,7 @@
 
 ## Week 7
 
-## 10 Nov 2020
+### 10 Nov 2020
 
 * *1 hour* PRISM Games familiarization
 
