@@ -120,3 +120,10 @@
 
 ## Week 11
 
+### 7 Dec 2020
+
+* *3 hours* Pokemon battle mechanics familiarization/analysis
+
+### 8 Dec 2020
+
+* *1 hour* Project scope consideration in terms of pokemon mechanics involvement
