@@ -126,4 +126,14 @@
 
 ### 8 Dec 2020
 
+* *4 hours* Project seminars
 * *1 hour* Project scope consideration in terms of pokemon mechanics involvement
+
+### 10 Dec 2020
+
+* *1 hour* Printing PRISM file from python consideration
+
+### 11 Dec 2020
+
+* *2 hours* Creating Python code to print a PRISM file based off of simple pokemon 1v1
+
