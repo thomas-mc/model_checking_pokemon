@@ -1,0 +1,54 @@
+mdp
+
+const int eevee_attack = 11;
+
+const int eevee_defence = 50;
+
+const int eevee_special = 65;
+
+const int eevee_speed = 55;
+
+const int eevee_total = 280;
+
+
+const int machop_attack = 16;
+
+const int machop_defence = 50;
+
+const int machop_special = 35;
+
+const int machop_speed = 35;
+
+const int machop_total = 270;
+
+
+module pokemon_battle
+
+	eevee_hp : [-20..55] init 55;
+
+
+	machop_hp : [-20..70] init 70;
+
+
+	turn : [0..2];
+	[random_start]	turn = 0 -> 0.5 : (turn' = 1) + 0.5 : (turn' = 2);
+	[eevee_attack_machop] turn = 1 & eevee_hp > 0 & machop_hp > 0->
+
+		1/2 : (machop_hp' = machop_hp - eevee_attack) & (turn' = 2) +
+
+		1/2 : (turn'=2);
+
+
+	[machop_attack_eevee] turn = 2 & machop_hp > 0 & eevee_hp > 0->
+
+		1/2 : (eevee_hp' = eevee_hp - machop_attack) & (turn' = 1) +
+
+		1/2 : (turn'=1);
+
+
+endmodule
+
+label "eevee_wins" = eevee_hp > 0 & machop_hp < 1;
+
+label "machop_wins" = machop_hp > 0 & eevee_hp < 1;
+

@@ -1,0 +1,52 @@
+mdp
+
+//const int Eevee_hp = 55;
+
+//downgraded attack values to be 1/5th
+const int Eevee_attack = 11;
+const int Eevee_defence = 50;
+const int Eevee_special = 65;
+const int Eevee_speed = 55;
+const int Eevee_total = 280;
+
+//const int Machop_hp = 70;
+const int Machop_attack = 16;
+const int Machop_defence = 50;
+const int Machop_special = 35;
+const int Machop_speed = 35;
+const int Machop_total = 270;
+
+
+module pokemon_battle
+
+	Eevee_hp : [-16..55]	init 55;
+	//double Eevee_hp = 55;
+	Machop_hp : [-12..70]	init 70;
+
+	turn : [0..2];
+	[random_start]	turn = 0 -> 0.5 : (turn' = 1) + 0.5 : (turn' = 2);
+
+	//using simplified damage formula at the moment, pokemon level set to 1, power set to be 12 (middle range of power), attack used
+	//as pokemon's attack stat instead of move's, defence is target's defence, modifier is set as just 0.9 now because not dealing
+	//with any complexity of type, and random val would usually fall between 0.85 and 1, so set as 0.9 for now
+	//[Eevee_attack_Machop] turn = 1 & Eevee_hp > 0 ->
+		//(Machop_hp' = ( ( ( ( ((2/5)+2)*12*(Eevee_attack/Machop_defence) ) / 50 ) + 2 ) *  0.9)) & (turn' = 2) ;
+	
+	//simplified version doesn't preserve pokemon mechanics, just for testing, because only dealing with integers,
+	//we do attacking pokemon's stat/5
+	
+	[Eevee_attack_Machop] turn = 1 & Eevee_hp > 0 & Machop_hp > 0-> 
+		1/2 : (Machop_hp' = Machop_hp - Eevee_attack ) & (turn' = 2) +
+		1/2 : (turn' = 2);
+
+	[Machop_attack_Eevee] turn = 2 & Machop_hp > 0 & Eevee_hp > 0 ->
+		1/2 : (Eevee_hp' = Eevee_hp - (Machop_attack) ) & (turn' = 1) +
+		1/2 : (turn'=1);
+
+
+endmodule
+
+label "Eevee_wins" = Eevee_hp > 0 & Machop_hp < 1;
+label "Machop_wins" = Machop_hp > 0 & Eevee_hp < 1;
+
+//formula random_modifier = 1/39(217 -> 255)/255

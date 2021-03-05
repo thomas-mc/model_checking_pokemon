@@ -1,0 +1,474 @@
+smg
+
+//stats will be pre-written in python file
+const int Venusaur_hp = 80;
+const int Venusaur_attack = 82;
+const int Venusaur_defense = 83;
+const int Venusaur_special = 100;
+const int Venusaur_speed = 80;
+
+const int Sandslash_hp = 75;
+const int Sandslash_attack = 100;
+const int Sandslash_defense = 110;
+const int Sandslash_special = 55;
+const int Sandslash_speed = 65;
+
+const int Nidoqueen_hp = 90;
+const int Nidoqueen_attack = 92;
+const int Nidoqueen_defense = 87;
+const int Nidoqueen_special = 75;
+const int Nidoqueen_speed = 76;
+
+const int Parasect_hp = 60;
+const int Parasect_attack = 95;
+const int Parasect_defense = 80;
+const int Parasect_special = 80;
+const int Parasect_speed = 30;
+
+const int Arcanine_hp = 90;
+const int Arcanine_attack = 110;
+const int Arcanine_defense = 80;
+const int Arcanine_special = 80;
+const int Arcanine_speed = 95;
+
+const int Golbat_hp = 140;
+const int Golbat_attack = 70;
+const int Golbat_defense = 45;
+const int Golbat_special = 50;
+const int Golbat_speed = 90;
+
+//number notation of pokemon - not turn order, just team order
+const int player1_pokemon1_number = 1;
+const int player1_pokemon2_number = 2;
+const int player1_pokemon3_number = 3;
+const int player2_pokemon1_number = 4;
+const int player2_pokemon2_number = 5;
+const int player2_pokemon3_number = 6;
+
+//idk why i have these here, I could probably just name the variable this at the top
+const int player1_pokemon1_hp = Venusaur_hp;
+const int player1_pokemon2_hp = Sandslash_hp;
+const int player1_pokemon3_hp = Nidoqueen_hp;
+const int player2_pokemon1_hp = Parasect_hp;
+const int player2_pokemon2_hp = Arcanine_hp;
+const int player2_pokemon3_hp = Golbat_hp;
+
+const int player1_pokemon1_speed = Venusaur_speed;
+const int player1_pokemon2_speed = Sandslash_speed;
+const int player1_pokemon3_speed = Nidoqueen_speed;
+const int player2_pokemon1_speed = Parasect_speed;
+const int player2_pokemon2_speed = Arcanine_speed;
+const int player2_pokemon3_speed = Golbat_speed;
+
+
+player player1
+	[select_initial_pokemon_player1], [select_move_player1], [player1_pokemon1_knocked_out], [player1_pokemon2_knocked_out], [player1_pokemon3_knocked_out], [select_subsequent_pokemon_player1], [player1_pokemon1_attacks], [player1_pokemon2_attacks], [player1_pokemon3_attacks]
+endplayer
+
+player player2
+	[select_initial_pokemon_player2], [select_move_player2], [player2_pokemon1_knocked_out], [player2_pokemon2_knocked_out], [player2_pokemon3_knocked_out], [select_subsequent_pokemon_player2], [player2_pokemon1_attacks], [player2_pokemon2_attacks], [player2_pokemon3_attacks]
+endplayer
+
+module pokemon_battle
+
+	//setting lower bound to the max damage that happens in the attacking portion of the module for now
+	player1_pokemon1_health : [0..player1_pokemon1_hp] init player1_pokemon1_hp;
+	player1_pokemon2_health : [0..player1_pokemon2_hp] init player1_pokemon2_hp;
+	player1_pokemon3_health : [0..player1_pokemon3_hp] init player1_pokemon3_hp;
+	player2_pokemon1_health : [0..player2_pokemon1_hp] init player2_pokemon1_hp;
+	player2_pokemon2_health : [0..player2_pokemon2_hp] init player2_pokemon2_hp;
+	player2_pokemon3_health : [0..player2_pokemon3_hp] init player2_pokemon3_hp;
+
+	player1_current_health : [0..highest_health_player1] init highest_health_player1;
+	player2_current_health : [0..highest_health_player2] init highest_health_player2;
+	player1_pokemon_selection : [1..3]; //initializing without having chosen pokemon 1-3
+	player2_pokemon_selection : [4..6]; //initializing without having chosen pokemon 4-6
+
+	pokemon_select_player1_init : bool init false;
+	pokemon_select_player2_init : bool init false;
+
+	player1_pokemon1_move_selected : [1..4];
+	player1_pokemon2_move_selected : [1..4];
+	player1_pokemon3_move_selected : [1..4];
+	player2_pokemon1_move_selected : [1..4];
+	player2_pokemon2_move_selected : [1..4];
+	player2_pokemon3_move_selected : [1..4];
+
+	player_turn : [0..2] init 0;
+	select_first_pokemon_turn : [1..2] init 1;
+
+	//boolean containing knocked out status of every pokemon
+	player1_pokemon1_knocked : bool init false;
+	player1_pokemon2_knocked : bool init false;
+	player1_pokemon3_knocked : bool init false;
+	player2_pokemon1_knocked : bool init false;
+	player2_pokemon2_knocked : bool init false;
+	player2_pokemon3_knocked : bool init false;
+	
+	//will be set true when it is the player's turn and their current pokemon choice is knocked out
+	player1_need_pokemon : bool;
+	player2_need_pokemon : bool;
+
+
+	//selecting pokemon
+	[select_initial_pokemon_player1] player1_pokemon1_knocked = false & pokemon_select_player1_init = false & select_first_pokemon_turn = 1 & player_turn = 0 -> (player1_pokemon_selection' = 1) & (pokemon_select_player1_init' = true) & (select_first_pokemon_turn' = 2) & (player1_current_health' = player1_pokemon1_hp);
+	[select_initial_pokemon_player1] player1_pokemon2_knocked = false & pokemon_select_player1_init = false & select_first_pokemon_turn = 1 & player_turn = 0 -> (player1_pokemon_selection' = 2) & (pokemon_select_player1_init' = true) & (select_first_pokemon_turn' = 2) & (player1_current_health' = player1_pokemon2_hp);
+	[select_initial_pokemon_player1] player1_pokemon3_knocked = false & pokemon_select_player1_init = false & select_first_pokemon_turn = 1 & player_turn = 0 -> (player1_pokemon_selection' = 3) & (pokemon_select_player1_init' = true) & (select_first_pokemon_turn' = 2) & (player1_current_health' = player1_pokemon3_hp);
+
+	[select_initial_pokemon_player2] player2_pokemon1_knocked = false & pokemon_select_player2_init = false & select_first_pokemon_turn = 2 & player_turn = 0 -> (player2_pokemon_selection' = 4) & (pokemon_select_player2_init' = true) & (player2_current_health' = player2_pokemon1_hp);
+	[select_initial_pokemon_player2] player2_pokemon2_knocked = false & pokemon_select_player2_init = false & select_first_pokemon_turn = 2 & player_turn = 0 -> (player2_pokemon_selection' = 5) & (pokemon_select_player2_init' = true) & (player2_current_health' = player2_pokemon2_hp);
+	[select_initial_pokemon_player2] player2_pokemon3_knocked = false & pokemon_select_player2_init = false & select_first_pokemon_turn = 2 & player_turn = 0 -> (player2_pokemon_selection' = 6) & (pokemon_select_player2_init' = true) & (player2_current_health' = player2_pokemon3_hp);
+
+
+	//checking pokemon combinations speed against each other and determining what would be the relative turn order
+	//could add probabilstic chance, when speed is the same the choice of who goes first is random, but my model is already too big, that would just be a bit unnecessary
+	//I don't know if this needs to go in the player definitions, but if it did need to go there, I think i would need to duplicate it, because you can't put the same action statement in 2 player defs
+	[pokemon_turn_order] player1_pokemon_selection = 1 & player2_pokemon_selection = 4 & player1_pokemon1_speed >= player2_pokemon1_speed -> (player_turn' = 1);
+	[pokemon_turn_order] player1_pokemon_selection = 1 & player2_pokemon_selection = 4 & player1_pokemon1_speed < player2_pokemon1_speed -> (player_turn' = 2);
+	[pokemon_turn_order] player1_pokemon_selection = 1 & player2_pokemon_selection = 5 & player1_pokemon1_speed >= player2_pokemon2_speed -> (player_turn' = 1);
+	[pokemon_turn_order] player1_pokemon_selection = 1 & player2_pokemon_selection = 5 & player1_pokemon1_speed < player2_pokemon2_speed -> (player_turn' = 2);
+	[pokemon_turn_order] player1_pokemon_selection = 1 & player2_pokemon_selection = 6 & player1_pokemon1_speed >= player2_pokemon3_speed -> (player_turn' = 1);
+	[pokemon_turn_order] player1_pokemon_selection = 1 & player2_pokemon_selection = 6 & player1_pokemon1_speed < player2_pokemon3_speed -> (player_turn' = 2);
+
+	[pokemon_turn_order] player1_pokemon_selection = 2 & player2_pokemon_selection = 4 & player1_pokemon2_speed >= player2_pokemon1_speed -> (player_turn' = 1);
+	[pokemon_turn_order] player1_pokemon_selection = 2 & player2_pokemon_selection = 4 & player1_pokemon2_speed < player2_pokemon1_speed -> (player_turn' = 2);
+	[pokemon_turn_order] player1_pokemon_selection = 2 & player2_pokemon_selection = 5 & player1_pokemon2_speed >= player2_pokemon2_speed -> (player_turn' = 1);
+	[pokemon_turn_order] player1_pokemon_selection = 2 & player2_pokemon_selection = 5 & player1_pokemon2_speed < player2_pokemon2_speed -> (player_turn' = 2);
+	[pokemon_turn_order] player1_pokemon_selection = 2 & player2_pokemon_selection = 6 & player1_pokemon2_speed >= player2_pokemon3_speed -> (player_turn' = 1);
+	[pokemon_turn_order] player1_pokemon_selection = 2 & player2_pokemon_selection = 6 & player1_pokemon2_speed < player2_pokemon3_speed -> (player_turn' = 2);
+
+	[pokemon_turn_order] player1_pokemon_selection = 3 & player2_pokemon_selection = 4 & player1_pokemon3_speed >= player2_pokemon1_speed -> (player_turn' = 1);
+	[pokemon_turn_order] player1_pokemon_selection = 3 & player2_pokemon_selection = 4 & player1_pokemon3_speed < player2_pokemon1_speed -> (player_turn' = 2);
+	[pokemon_turn_order] player1_pokemon_selection = 3 & player2_pokemon_selection = 5 & player1_pokemon3_speed >= player2_pokemon2_speed -> (player_turn' = 1);
+	[pokemon_turn_order] player1_pokemon_selection = 3 & player2_pokemon_selection = 5 & player1_pokemon3_speed < player2_pokemon2_speed -> (player_turn' = 2);
+	[pokemon_turn_order] player1_pokemon_selection = 3 & player2_pokemon_selection = 6 & player1_pokemon3_speed >= player2_pokemon3_speed -> (player_turn' = 1);
+	[pokemon_turn_order] player1_pokemon_selection = 3 & player2_pokemon_selection = 6 & player1_pokemon3_speed < player2_pokemon3_speed -> (player_turn' = 2);
+
+
+
+	//selecting player 1's first pokemon's move
+	[select_move_player1] player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 1 -> (player1_pokemon1_move_selected' = 1);
+	[select_move_player1] player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 1 -> (player1_pokemon1_move_selected' = 2);
+	[select_move_player1] player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 1 -> (player1_pokemon1_move_selected' = 3);
+	[select_move_player1] player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 1 -> (player1_pokemon1_move_selected' = 4);
+
+	//selecting player 1's second pokemon's move
+	[select_move_player1] player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 1 -> (player1_pokemon2_move_selected' = 1);
+	[select_move_player1] player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 1 -> (player1_pokemon2_move_selected' = 2);
+	[select_move_player1] player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 1 -> (player1_pokemon2_move_selected' = 3);
+	[select_move_player1] player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 1 -> (player1_pokemon2_move_selected' = 4);
+
+	//selecting player 1's third pokemon's move
+	[select_move_player1] player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 1 -> (player1_pokemon3_move_selected' = 1);
+	[select_move_player1] player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 1 -> (player1_pokemon3_move_selected' = 2);
+	[select_move_player1] player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 1 -> (player1_pokemon3_move_selected' = 3);
+	[select_move_player1] player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 1 -> (player1_pokemon3_move_selected' = 4);
+
+	//selecting player 2's first pokemon's move
+	[select_move_player2] player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 2 -> (player2_pokemon1_move_selected' = 1);
+	[select_move_player2] player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 2 -> (player2_pokemon1_move_selected' = 2);
+	[select_move_player2] player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 2 -> (player2_pokemon1_move_selected' = 3);
+	[select_move_player2] player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 2 -> (player2_pokemon1_move_selected' = 4);
+
+	//selecting player 2's second pokemon's move
+	[select_move_player2] player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 2 -> (player2_pokemon2_move_selected' = 1);
+	[select_move_player2] player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 2 -> (player2_pokemon2_move_selected' = 2);
+	[select_move_player2] player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 2 -> (player2_pokemon2_move_selected' = 3);
+	[select_move_player2] player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 2 -> (player2_pokemon2_move_selected' = 4);
+
+	//selecting player 2's third pokemon's move
+	[select_move_player2] player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 2 -> (player2_pokemon3_move_selected' = 1);
+	[select_move_player2] player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 2 -> (player2_pokemon3_move_selected' = 2);
+	[select_move_player2] player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 2 -> (player2_pokemon3_move_selected' = 3);
+	[select_move_player2] player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 2 -> (player2_pokemon3_move_selected' = 4);
+
+	
+	//check if current pokemon is knocked out on turn
+	[player1_pokemon1_knocked_out] player1_pokemon1_health < 1 & player_turn = 1 & player1_pokemon_selection = 1 -> (player1_pokemon1_knocked' = true) & (player1_need_pokemon' = true);
+	[player1_pokemon2_knocked_out] player1_pokemon1_health < 1 & player_turn = 1 & player1_pokemon_selection = 2 -> (player1_pokemon2_knocked' = true) & (player1_need_pokemon' = true);
+	[player1_pokemon3_knocked_out] player1_pokemon1_health < 1 & player_turn = 1 & player1_pokemon_selection = 3 -> (player1_pokemon3_knocked' = true) & (player1_need_pokemon' = true);
+	[player2_pokemon1_knocked_out] player1_pokemon1_health < 1 & player_turn = 2 & player2_pokemon_selection = 4 -> (player2_pokemon1_knocked' = true) & (player2_need_pokemon' = true);
+	[player2_pokemon2_knocked_out] player1_pokemon1_health < 1 & player_turn = 2 & player2_pokemon_selection = 5 -> (player2_pokemon2_knocked' = true) & (player2_need_pokemon' = true);
+	[player2_pokemon3_knocked_out] player1_pokemon1_health < 1 & player_turn = 2 & player2_pokemon_selection = 6 -> (player2_pokemon3_knocked' = true) & (player2_need_pokemon' = true);
+
+
+	//combinations for selecting next pokemon once there are knocked out pokemon
+	[select_subsequent_pokemon_player1] player1_need_pokemon = true & player1_pokemon_selection = 1 & player1_pokemon1_knocked = true & player1_pokemon2_knocked = false & player_turn = 1 -> (player1_pokemon_selection' = 2) & (player1_need_pokemon' = false) & (player1_current_health' = player1_pokemon2_hp);
+	[select_subsequent_pokemon_player1] player1_need_pokemon = true & player1_pokemon_selection = 1 & player1_pokemon1_knocked = true & player1_pokemon3_knocked = false & player_turn = 1 -> (player1_pokemon_selection' = 3) & (player1_need_pokemon' = false) & (player1_current_health' = player1_pokemon3_hp);
+	[select_subsequent_pokemon_player1] player1_need_pokemon = true & player1_pokemon_selection = 1 & player1_pokemon1_knocked = true & player1_pokemon3_knocked = true & player1_pokemon2_knocked = false & player_turn = 1 -> (player1_pokemon_selection' = 2) & (player1_need_pokemon' = false) & (player1_current_health' = player1_pokemon2_hp);  
+	[select_subsequent_pokemon_player1] player1_need_pokemon = true & player1_pokemon_selection = 1 & player1_pokemon1_knocked = true & player1_pokemon2_knocked = true & player1_pokemon3_knocked = false & player_turn = 1 -> (player1_pokemon_selection' = 3) & (player1_need_pokemon' = false) & (player1_current_health' = player1_pokemon3_hp);  
+
+	[select_subsequent_pokemon_player1] player1_need_pokemon = true & player1_pokemon_selection = 2 & player1_pokemon2_knocked = true & player1_pokemon1_knocked = false & player_turn = 1 -> (player1_pokemon_selection' = 1) & (player1_need_pokemon' = false) & (player1_current_health' = player1_pokemon1_hp);
+	[select_subsequent_pokemon_player1] player1_need_pokemon = true & player1_pokemon_selection = 2 & player1_pokemon2_knocked = true & player1_pokemon3_knocked = false & player_turn = 1 -> (player1_pokemon_selection' = 3) & (player1_need_pokemon' = false) & (player1_current_health' = player1_pokemon3_hp);
+	[select_subsequent_pokemon_player1] player1_need_pokemon = true & player1_pokemon_selection = 2 & player1_pokemon2_knocked = true & player1_pokemon3_knocked = true & player1_pokemon1_knocked = false & player_turn = 1 -> (player1_pokemon_selection' = 1) & (player1_need_pokemon' = false) & (player1_current_health' = player1_pokemon1_hp);  
+	[select_subsequent_pokemon_player1] player1_need_pokemon = true & player1_pokemon_selection = 2 & player1_pokemon2_knocked = true & player1_pokemon1_knocked = true & player1_pokemon3_knocked = false & player_turn = 1 -> (player1_pokemon_selection' = 3) & (player1_need_pokemon' = false) & (player1_current_health' = player1_pokemon3_hp);  
+
+	[select_subsequent_pokemon_player1] player1_need_pokemon = true & player1_pokemon_selection = 3 & player1_pokemon3_knocked = true & player1_pokemon1_knocked = false & player_turn = 1 -> (player1_pokemon_selection' = 1) & (player1_need_pokemon' = false) & (player1_current_health' = player1_pokemon1_hp);
+	[select_subsequent_pokemon_player1] player1_need_pokemon = true & player1_pokemon_selection = 3 & player1_pokemon3_knocked = true & player1_pokemon2_knocked = false & player_turn = 1 -> (player1_pokemon_selection' = 2) & (player1_need_pokemon' = false) & (player1_current_health' = player1_pokemon2_hp);
+	[select_subsequent_pokemon_player1] player1_need_pokemon = true & player1_pokemon_selection = 3 & player1_pokemon3_knocked = true & player1_pokemon2_knocked = true & player1_pokemon1_knocked = false & player_turn = 1 -> (player1_pokemon_selection' = 1) & (player1_need_pokemon' = false) & (player1_current_health' = player1_pokemon1_hp);  
+	[select_subsequent_pokemon_player1] player1_need_pokemon = true & player1_pokemon_selection = 3 & player1_pokemon3_knocked = true & player1_pokemon1_knocked = true & player1_pokemon2_knocked = false & player_turn = 1 -> (player1_pokemon_selection' = 2) & (player1_need_pokemon' = false) & (player1_current_health' = player1_pokemon2_hp);  
+
+
+	[select_subsequent_pokemon_player2] player2_need_pokemon = true & player2_pokemon_selection = 4 & player2_pokemon1_knocked = true & player2_pokemon2_knocked = false & player_turn = 2 -> (player2_pokemon_selection' = 5) & (player2_need_pokemon' = false) & (player2_current_health' = player2_pokemon2_hp);
+	[select_subsequent_pokemon_player2] player2_need_pokemon = true & player2_pokemon_selection = 4 & player2_pokemon1_knocked = true & player2_pokemon3_knocked = false & player_turn = 2 -> (player2_pokemon_selection' = 6) & (player2_need_pokemon' = false) & (player2_current_health' = player2_pokemon3_hp);
+	[select_subsequent_pokemon_player2] player2_need_pokemon = true & player2_pokemon_selection = 4 & player2_pokemon1_knocked = true & player2_pokemon3_knocked = true & player2_pokemon2_knocked = false & player_turn = 2 -> (player2_pokemon_selection' = 5) & (player2_need_pokemon' = false) & (player2_current_health' = player2_pokemon2_hp);  
+	[select_subsequent_pokemon_player2] player2_need_pokemon = true & player2_pokemon_selection = 4 & player2_pokemon1_knocked = true & player2_pokemon2_knocked = true & player2_pokemon3_knocked = false & player_turn = 2 -> (player2_pokemon_selection' = 6) & (player2_need_pokemon' = false) & (player2_current_health' = player2_pokemon3_hp);  
+
+	[select_subsequent_pokemon_player2] player2_need_pokemon = true & player2_pokemon_selection = 5 & player2_pokemon2_knocked = true & player2_pokemon1_knocked = false & player_turn = 2 -> (player2_pokemon_selection' = 4) & (player2_need_pokemon' = false) & (player2_current_health' = player2_pokemon1_hp);
+	[select_subsequent_pokemon_player2] player2_need_pokemon = true & player2_pokemon_selection = 5 & player2_pokemon2_knocked = true & player2_pokemon3_knocked = false & player_turn = 2 -> (player2_pokemon_selection' = 6) & (player2_need_pokemon' = false) & (player2_current_health' = player2_pokemon3_hp);
+	[select_subsequent_pokemon_player2] player2_need_pokemon = true & player2_pokemon_selection = 5 & player2_pokemon2_knocked = true & player2_pokemon3_knocked = true & player2_pokemon1_knocked = false & player_turn = 2 -> (player2_pokemon_selection' = 4) & (player2_need_pokemon' = false) & (player2_current_health' = player2_pokemon1_hp);  
+	[select_subsequent_pokemon_player2] player2_need_pokemon = true & player2_pokemon_selection = 5 & player2_pokemon2_knocked = true & player2_pokemon1_knocked = true & player2_pokemon3_knocked = false & player_turn = 2 -> (player2_pokemon_selection' = 6) & (player2_need_pokemon' = false) & (player2_current_health' = player2_pokemon3_hp);  
+
+	[select_subsequent_pokemon_player2] player2_need_pokemon = true & player2_pokemon_selection = 6 & player2_pokemon3_knocked = true & player2_pokemon1_knocked = false & player_turn = 2 -> (player2_pokemon_selection' = 4) & (player2_need_pokemon' = false) & (player2_current_health' = player2_pokemon1_hp);
+	[select_subsequent_pokemon_player2] player2_need_pokemon = true & player2_pokemon_selection = 6 & player2_pokemon3_knocked = true & player2_pokemon2_knocked = false & player_turn = 2 -> (player2_pokemon_selection' = 5) & (player2_need_pokemon' = false) & (player2_current_health' = player2_pokemon2_hp);
+	[select_subsequent_pokemon_player2] player2_need_pokemon = true & player2_pokemon_selection = 6 & player2_pokemon3_knocked = true & player2_pokemon2_knocked = true & player2_pokemon1_knocked = false & player_turn = 2 -> (player2_pokemon_selection' = 4) & (player2_need_pokemon' = false) & (player2_current_health' = player2_pokemon1_hp);  
+	[select_subsequent_pokemon_player2] player2_need_pokemon = true & player2_pokemon_selection = 6 & player2_pokemon3_knocked = true & player2_pokemon1_knocked = true & player2_pokemon2_knocked = false & player_turn = 2 -> (player2_pokemon_selection' = 5) & (player2_need_pokemon' = false) & (player2_current_health' = player2_pokemon2_hp); 
+
+
+
+
+	//player 1 pokemon 1 attacks player 2's first pokemon with each move
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 1 & player1_pokemon1_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 1 > 0 -> 0.95 : (player2_pokemon1_health' = player2_pokemon1_health - 1) & (player_turn' = 2) + 1 - 0.95 : (player_turn' = 2);
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 2 & player1_pokemon1_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 2 > 0 -> (player2_pokemon1_health' = player2_pokemon1_health - 2) & (player_turn' = 2);
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 3 & player1_pokemon1_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 4 > 0 -> 0.95 : (player2_pokemon1_health' = player2_pokemon1_health - 4) & (player_turn' = 2) + 1 - 0.95 : (player_turn' = 2);
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 4 & player1_pokemon1_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 3 > 0 -> (player2_pokemon1_health' = player2_pokemon1_health - 3) & (player_turn' = 2);
+
+	//p1p1 killshot p2p1
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 1 & player1_pokemon1_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 1 < 1 -> 0.95 : (player2_pokemon1_health' = 0) & (player_turn' = 2) + 1 - 0.95 : (player_turn' = 2);
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 2 & player1_pokemon1_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 2 < 1 -> (player2_pokemon1_health' = 0) & (player_turn' = 2);
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 3 & player1_pokemon1_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 4 < 1 -> 0.95 : (player2_pokemon1_health' = 0) & (player_turn' = 2) + 1 - 0.95 : (player_turn' = 2);
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 4 & player1_pokemon1_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 3 < 1 -> (player2_pokemon1_health' = 0) & (player_turn' = 2);
+
+	//player 1 pokemon 1 attacks player 2's second pokemon with each move
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 1 & player1_pokemon1_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 0 > 0 -> 0.95 : (player2_pokemon2_health' = player2_pokemon2_health - 0) & (player_turn' = 2) + 1 - 0.95 : (player_turn' = 2);
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 2 & player1_pokemon1_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 1 > 0 -> (player2_pokemon2_health' = player2_pokemon2_health - 1) & (player_turn' = 2);
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 3 & player1_pokemon1_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 2 > 0 -> 0.95 : (player2_pokemon2_health' = player2_pokemon2_health - 2) & (player_turn' = 2) + 1 - 0.95 : (player_turn' = 2);
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 4 & player1_pokemon1_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 2 > 0 -> (player2_pokemon2_health' = player2_pokemon2_health - 2) & (player_turn' = 2);
+
+	//p1p1 killshot p2p2
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 1 & player1_pokemon1_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 0 < 1 -> 0.95 : (player2_pokemon2_health' = 0) & (player_turn' = 2) + 1 - 0.95 : (player_turn' = 2);
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 2 & player1_pokemon1_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 1 < 1 -> (player2_pokemon2_health' = 0) & (player_turn' = 2);
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 3 & player1_pokemon1_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 2 < 1 -> 0.95 : (player2_pokemon2_health' = 0) & (player_turn' = 2) + 1 - 0.95 : (player_turn' = 2);
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 4 & player1_pokemon1_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 2 < 1 -> (player2_pokemon2_health' = 0) & (player_turn' = 2);
+
+	//player 1 pokemon 1 attacks player 2's third pokemon with each move
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 1 & player1_pokemon1_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 1 > 0 -> 0.95 : (player2_pokemon3_health' = player2_pokemon3_health - 1) & (player_turn' = 2) + 1 - 0.95 : (player_turn' = 2);
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 2 & player1_pokemon1_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 2 > 0 -> (player2_pokemon3_health' = player2_pokemon3_health - 2) & (player_turn' = 2);
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 3 & player1_pokemon1_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 3 > 0 -> 0.95 : (player2_pokemon3_health' = player2_pokemon3_health - 3) & (player_turn' = 2) + 1 - 0.95 : (player_turn' = 2);
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 4 & player1_pokemon1_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 4 > 0 -> (player2_pokemon3_health' = player2_pokemon3_health - 4) & (player_turn' = 2);
+
+	//p1p1 killshot p2p3
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 1 & player1_pokemon1_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 1 < 1 -> 0.95 : (player2_pokemon3_health' = player2_pokemon3_health - 1) & (player_turn' = 2) + 1 - 0.95 : (player_turn' = 2);
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 2 & player1_pokemon1_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 0 < 2 -> (player2_pokemon3_health' = player2_pokemon3_health - 2) & (player_turn' = 2);
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 3 & player1_pokemon1_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 0 < 3 -> 0.95 : (player2_pokemon3_health' = player2_pokemon3_health - 3) & (player_turn' = 2) + 1 - 0.95 : (player_turn' = 2);
+	[player1_pokemon1_attacks] player1_pokemon_selection = 1 & player1_pokemon1_move_selected = 4 & player1_pokemon1_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 0 < 4 -> (player2_pokemon3_health' = player2_pokemon3_health - 4) & (player_turn' = 2);
+
+
+
+	//player 1 pokemon 2 attacks player 2's first pokemon with each move
+	//(this pokemon against its opposition is very poor, hence it does 0 damage 3 times)
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 1 & player1_pokemon2_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 0 > 0 -> (player_turn' = 2);
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 2 & player1_pokemon2_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 0 > 0 -> (player_turn' = 2);
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 3 & player1_pokemon2_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 0 > 0 -> (player_turn' = 2);
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 4 & player1_pokemon2_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 1 > 0 -> (player2_pokemon1_health' = player2_pokemon1_health - 1) & (player_turn' = 2);
+
+	//p1p2 killshot p2p1
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 1 & player1_pokemon2_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 0 < 1 -> (player2_pokemon1_health' = 0) & (player_turn' = 2);
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 2 & player1_pokemon2_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 0 < 1 -> (player2_pokemon1_health' = 0) & (player_turn' = 2);
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 3 & player1_pokemon2_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 0 < 1 -> (player2_pokemon1_health' = 0) & (player_turn' = 2);
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 4 & player1_pokemon2_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 1 < 1 -> (player2_pokemon1_health' = 0) & (player_turn' = 2);
+
+	//player 1 pokemon 2 attacks player 2's second pokemon with each move
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 1 & player1_pokemon2_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 4 > 0 -> (player2_pokemon2_health' = player2_pokemon2_health - 4) & (player_turn' = 2);
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 2 & player1_pokemon2_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 8 > 0 -> (player2_pokemon2_health' = player2_pokemon2_health - 8) & (player_turn' = 2);
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 3 & player1_pokemon2_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 1 > 0 -> (player2_pokemon2_health' = player2_pokemon2_health - 1) & (player_turn' = 2);
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 4 & player1_pokemon2_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 9 > 0 -> (player2_pokemon2_health' = player2_pokemon2_health - 9) & (player_turn' = 2);
+
+	//p1p2 killshot p2p2
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 1 & player1_pokemon2_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 4 < 1 -> (player2_pokemon2_health' = 0) & (player_turn' = 2);
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 2 & player1_pokemon2_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 8 < 1 -> (player2_pokemon2_health' = 0) & (player_turn' = 2);
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 3 & player1_pokemon2_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 1 < 1 -> (player2_pokemon2_health' = 0) & (player_turn' = 2);
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 4 & player1_pokemon2_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 9 < 1 -> (player2_pokemon2_health' = 0) & (player_turn' = 2);
+
+	//player 1 pokemon 2 attacks player 2's third pokemon with each move
+	//0 damage every move
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 1 & player1_pokemon2_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 0 > 0 -> (player_turn' = 2);
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 2 & player1_pokemon2_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 0 > 0 -> (player_turn' = 2);
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 3 & player1_pokemon2_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 0 > 0 -> (player_turn' = 2);
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 4 & player1_pokemon2_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 0 > 0 -> (player_turn' = 2);		
+
+	//p1p2 killshot p2p3
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 1 & player1_pokemon2_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 0 < 1 -> (player2_pokemon3_health' = 0) & (player_turn' = 2);
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 2 & player1_pokemon2_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 0 < 1 -> (player2_pokemon3_health' = 0) & (player_turn' = 2);
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 3 & player1_pokemon2_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 0 < 1 -> (player2_pokemon3_health' = 0) & (player_turn' = 2);
+	[player1_pokemon2_attacks] player1_pokemon_selection = 2 & player1_pokemon2_move_selected = 4 & player1_pokemon2_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 0 < 1 -> (player2_pokemon3_health' = 0) & (player_turn' = 2);
+
+
+
+	//player 1 pokemon 3 attacks player 2's first pokemon with each move
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 1 & player1_pokemon3_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 1 > 0 -> 0.95 : (player2_pokemon1_health' = player2_pokemon1_health - 1) & (player_turn' = 2) + 1 - 0.95 : (player_turn' = 2);
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 2 & player1_pokemon3_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 2 > 0 -> (player2_pokemon1_health' = player2_pokemon1_health - 2) & (player_turn' = 2);
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 3 & player1_pokemon3_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 4 > 0 -> (player2_pokemon1_health' = player2_pokemon1_health - 4) & (player_turn' = 2);
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 4 & player1_pokemon3_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 8 > 0 -> (player2_pokemon1_health' = player2_pokemon1_health - 8) & (player_turn' = 2);
+
+	//p1p3 killshot p2p1
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 1 & player1_pokemon3_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 1 < 1 -> 0.95 : (player2_pokemon1_health' = 0) & (player_turn' = 2) + 1 - 0.95 : (player_turn' = 2);
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 2 & player1_pokemon3_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 2 < 1 -> (player2_pokemon1_health' = 0) & (player_turn' = 2);
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 3 & player1_pokemon3_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 4 < 1 -> (player2_pokemon1_health' = 0) & (player_turn' = 2);
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 4 & player1_pokemon3_knocked = false & player2_pokemon_selection = 4 & player2_pokemon1_knocked = false & player_turn = 1 & player2_pokemon1_health - 8 < 1 -> (player2_pokemon1_health' = 0) & (player_turn' = 2);
+	
+	//player 1 pokemon 3 attacks player 2's second pokemon with each move
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 1 & player1_pokemon3_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 3 > 0 -> 0.95 : (player2_pokemon2_health' = player2_pokemon2_health - 3) & (player_turn' = 2) + 1 - 0.95 : (player_turn' = 2);
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 2 & player1_pokemon3_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 4 > 0 -> (player2_pokemon2_health' = player2_pokemon2_health - 4) & (player_turn' = 2);
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 3 & player1_pokemon3_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 9 > 0 -> (player2_pokemon2_health' = player2_pokemon2_health - 9) & (player_turn' = 2);
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 4 & player1_pokemon3_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 15 > 0 -> (player2_pokemon2_health' = player2_pokemon2_health - 15) & (player_turn' = 2);
+
+	//p1p3 killshot p2p2
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 1 & player1_pokemon3_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 3 < 1 -> 0.95 : (player2_pokemon2_health' = 0) & (player_turn' = 2) + 1 - 0.95 : (player_turn' = 2);
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 2 & player1_pokemon3_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 4 < 1 -> (player2_pokemon2_health' = 0) & (player_turn' = 2);
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 3 & player1_pokemon3_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 9 < 1 -> (player2_pokemon2_health' = 0) & (player_turn' = 2);
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 4 & player1_pokemon3_knocked = false & player2_pokemon_selection = 5 & player2_pokemon2_knocked = false & player_turn = 1 & player2_pokemon2_health - 15 < 1 -> (player2_pokemon2_health' = 0) & (player_turn' = 2);
+
+	//player 1 pokemon 3 attacks player 2's third pokemon with each move
+	//this pokemon does 0 damage, extremely ineffective
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 1 & player1_pokemon3_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 0 > 0 -> (player_turn' = 2);
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 2 & player1_pokemon3_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 0 > 0 -> (player_turn' = 2);
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 3 & player1_pokemon3_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 0 > 0 -> (player_turn' = 2);
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 4 & player1_pokemon3_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 0 > 0 -> (player_turn' = 2);
+
+	//p1p3 killshot p2p3 (even though this clearly won't trigger, I'm just putting it in for good pracice, since the Python file will auto generate this)
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 1 & player1_pokemon3_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 0 < 1 -> (player2_pokemon3_health' = 0) & (player_turn' = 2);
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 2 & player1_pokemon3_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 0 < 1 -> (player2_pokemon3_health' = 0) & (player_turn' = 2);
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 3 & player1_pokemon3_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 0 < 1 -> (player2_pokemon3_health' = 0) & (player_turn' = 2);
+	[player1_pokemon3_attacks] player1_pokemon_selection = 3 & player1_pokemon3_move_selected = 4 & player1_pokemon3_knocked = false & player2_pokemon_selection = 6 & player2_pokemon3_knocked = false & player_turn = 1 & player2_pokemon3_health - 0 < 1 -> (player2_pokemon3_health' = 0) & (player_turn' = 2);
+
+
+
+	//player 2 pokemon 1 attacks player 1's first pokemon with each move
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 1 & player2_pokemon1_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 2 > 0 -> (player1_pokemon1_health' = player1_pokemon1_health - 2) & (player_turn' = 1);
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 2 & player2_pokemon1_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 1 > 0 -> (player1_pokemon1_health' = player1_pokemon1_health - 1) & (player_turn' = 1);
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 3 & player2_pokemon1_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 9 > 0 -> (player1_pokemon1_health' = player1_pokemon1_health - 9) & (player_turn' = 1);
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 4 & player2_pokemon1_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 4 > 0 -> (player1_pokemon1_health' = player1_pokemon1_health - 4) & (player_turn' = 1);
+
+	//p2p1 killshot p1p1
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 1 & player2_pokemon1_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 2 < 1 -> (player1_pokemon1_health' = 0) & (player_turn' = 1);
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 2 & player2_pokemon1_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 1 < 1 -> (player1_pokemon1_health' = 0) & (player_turn' = 1);
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 3 & player2_pokemon1_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 9 < 1 -> (player1_pokemon1_health' = 0) & (player_turn' = 1);
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 4 & player2_pokemon1_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 4 < 1 -> (player1_pokemon1_health' = 0) & (player_turn' = 1);
+
+	//player 2 pokemon 1 attacks player 1's second pokemon with each move
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 1 & player2_pokemon1_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 3 > 0 -> (player1_pokemon2_health' = player1_pokemon2_health - 3) & (player_turn' = 1);
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 2 & player2_pokemon1_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 2 > 0 -> (player1_pokemon2_health' = player1_pokemon2_health - 2) & (player_turn' = 1);
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 3 & player2_pokemon1_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 14 > 0 -> (player1_pokemon2_health' = player1_pokemon2_health - 14) & (player_turn' = 1);
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 4 & player2_pokemon1_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 6 > 0 -> (player1_pokemon2_health' = player1_pokemon2_health - 6) & (player_turn' = 1);
+
+	//p2p1 killshot p1p2
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 1 & player2_pokemon1_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 3 < 1 -> (player1_pokemon2_health' = 0) & (player_turn' = 1);
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 2 & player2_pokemon1_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 2 < 1 -> (player1_pokemon2_health' = 0) & (player_turn' = 1);
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 3 & player2_pokemon1_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 14 < 1 -> (player1_pokemon2_health' = 0) & (player_turn' = 1);
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 4 & player2_pokemon1_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 6 < 1 -> (player1_pokemon2_health' = 0) & (player_turn' = 1);
+
+	//player 2 pokemon 1 attacks player 1's third pokemon with each move
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 1 & player2_pokemon1_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 4 > 0 -> (player1_pokemon3_health' = player1_pokemon3_health - 4) & (player_turn' = 1);
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 2 & player2_pokemon1_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 2 > 0 -> (player1_pokemon3_health' = player1_pokemon3_health - 2) & (player_turn' = 1);
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 3 & player2_pokemon1_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 17 > 0 -> (player1_pokemon3_health' = player1_pokemon3_health - 17) & (player_turn' = 1);
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 4 & player2_pokemon1_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 8 > 0 -> (player1_pokemon3_health' = player1_pokemon3_health - 8) & (player_turn' = 1);
+
+	//p2p1 killshot p1p3
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 1 & player2_pokemon1_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 4 < 1 -> (player1_pokemon3_health' = 0) & (player_turn' = 1);
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 2 & player2_pokemon1_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 2 < 1 -> (player1_pokemon3_health' = 0) & (player_turn' = 1);
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 3 & player2_pokemon1_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 17 < 1 -> (player1_pokemon3_health' = 0) & (player_turn' = 1);
+	[player2_pokemon1_attacks] player2_pokemon_selection = 4 & player2_pokemon1_move_selected = 4 & player2_pokemon1_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 8 < 1 -> (player1_pokemon3_health' = 0) & (player_turn' = 1);
+
+
+
+
+	//player 2 pokemon 2 attacks player 1's first pokemon with each move
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 1 & player2_pokemon2_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 6 > 0 -> (player1_pokemon1_health' = player1_pokemon1_health - 6) & (player_turn' = 1);
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 2 & player2_pokemon2_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 9 > 0 -> (player1_pokemon1_health' = player1_pokemon1_health - 9) & (player_turn' = 1);
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 3 & player2_pokemon2_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 11 > 0 -> 0.75 : (player1_pokemon1_health' = player1_pokemon1_health - 11) & (player_turn' = 1) + 1-0.75 : (player_turn' = 1);
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 4 & player2_pokemon2_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 10 > 0 -> 0.85 : (player1_pokemon1_health' = player1_pokemon1_health - 10) & (player_turn' = 1) + 1-0.85 : (player_turn' = 1);
+
+	//p2p2 killshot p1p1
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 1 & player2_pokemon2_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 6 < 1 -> (player1_pokemon1_health' = 0) & (player_turn' = 1);
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 2 & player2_pokemon2_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 9 < 1 -> (player1_pokemon1_health' = 0) & (player_turn' = 1);
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 3 & player2_pokemon2_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 11 < 1 -> 0.75 : (player1_pokemon1_health' = 0) & (player_turn' = 1) + 1-0.75 : (player_turn' = 1);
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 4 & player2_pokemon2_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 10 < 1 -> 0.85 : (player1_pokemon1_health' = 0) & (player_turn' = 1) + 1-0.85 : (player_turn' = 1);
+
+	//player 2 pokemon 2 attacks player 1's second pokemon with each move
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 1 & player2_pokemon2_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 2 > 0 -> (player1_pokemon2_health' = player1_pokemon2_health - 2) & (player_turn' = 1);
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 2 & player2_pokemon2_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 3 > 0 -> (player1_pokemon2_health' = player1_pokemon2_health - 3) & (player_turn' = 1);
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 3 & player2_pokemon2_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 4 > 0 -> 0.75 : (player1_pokemon2_health' = player1_pokemon2_health - 4) & (player_turn' = 1) + 1-0.75 : (player_turn' = 1);
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 4 & player2_pokemon2_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 3 > 0 -> 0.85 : (player1_pokemon2_health' = player1_pokemon2_health - 3) & (player_turn' = 1) + 1-0.85 : (player_turn' = 1);
+
+	//p2p2 killshot p1p2
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 1 & player2_pokemon2_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 2 < 1 -> (player1_pokemon2_health' = 0) & (player_turn' = 1);
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 2 & player2_pokemon2_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 3 < 1 -> (player1_pokemon2_health' = 0) & (player_turn' = 1);
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 3 & player2_pokemon2_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 4 < 1 -> 0.75 : (player1_pokemon2_health' = 0) & (player_turn' = 1) + 1-0.75 : (player_turn' = 1);
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 4 & player2_pokemon2_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 3 < 1 -> 0.85 : (player1_pokemon2_health' = 0) & (player_turn' = 1) + 1-0.85 : (player_turn' = 1);
+
+	//player 2 pokemon 2 attacks player 1's third pokemon with each move
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 1 & player2_pokemon2_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 3 > 0 -> (player1_pokemon3_health' = player1_pokemon3_health - 3) & (player_turn' = 1);
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 2 & player2_pokemon2_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 4 > 0 -> (player1_pokemon3_health' = player1_pokemon3_health - 4) & (player_turn' = 1);
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 3 & player2_pokemon2_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 5 > 0 -> 0.75 : (player1_pokemon3_health' = player1_pokemon3_health - 5) & (player_turn' = 1) + 1-0.75 : (player_turn' = 1);
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 4 & player2_pokemon2_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 5 > 0 -> 0.85 : (player1_pokemon3_health' = player1_pokemon3_health - 5) & (player_turn' = 1) + 1-0.85 : (player_turn' = 1);
+
+	//p2p2 killshot p1p3
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 1 & player2_pokemon2_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 3 < 1 -> (player1_pokemon3_health' = 0) & (player_turn' = 1);
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 2 & player2_pokemon2_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 4 < 1 -> (player1_pokemon3_health' = 0) & (player_turn' = 1);
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 3 & player2_pokemon2_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 5 < 1 -> 0.75 : (player1_pokemon3_health' = 0) & (player_turn' = 1) + 1-0.75 : (player_turn' = 1);
+	[player2_pokemon2_attacks] player2_pokemon_selection = 5 & player2_pokemon2_move_selected = 4 & player2_pokemon2_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 5 < 1 -> 0.85 : (player1_pokemon3_health' = 0) & (player_turn' = 1) + 1-0.85 : (player_turn' = 1);
+
+
+
+
+	//player 2 pokemon 3 attacks player 1's first pokemon with each move
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 1 & player2_pokemon3_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 1 > 0 -> (player1_pokemon1_health' = player1_pokemon1_health - 1) & (player_turn' = 1);
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 2 & player2_pokemon3_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 2 > 0 -> (player1_pokemon1_health' = player1_pokemon1_health - 2) & (player_turn' = 1);
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 3 & player2_pokemon3_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 4 > 0 -> (player1_pokemon1_health' = player1_pokemon1_health - 4) & (player_turn' = 1);
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 4 & player2_pokemon3_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 6 > 0 -> 0.75 : (player1_pokemon1_health' = player1_pokemon1_health - 6) & (player_turn' = 1) + 1-0.75 : (player_turn' = 1);
+
+	//p2p3 killshot p1p1
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 1 & player2_pokemon3_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 1 < 1 -> (player1_pokemon1_health' = 0) & (player_turn' = 1);
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 2 & player2_pokemon3_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 2 < 1 -> (player1_pokemon1_health' = 0) & (player_turn' = 1);
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 3 & player2_pokemon3_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 4 < 1 -> (player1_pokemon1_health' = 0) & (player_turn' = 1);
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 4 & player2_pokemon3_knocked = false & player1_pokemon_selection = 1 & player1_pokemon1_knocked = false & player_turn = 2 & player1_pokemon1_health - 6 < 1 -> 0.75 : (player1_pokemon1_health' = 0) & (player_turn' = 1) + 1-0.75 : (player_turn' = 1);
+
+	//player 2 pokemon 3 attacks player 1's second pokemon with each move
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 1 & player2_pokemon3_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 0 > 0 -> (player_turn' = 1);
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 2 & player2_pokemon3_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 0 > 0 -> (player_turn' = 1);
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 3 & player2_pokemon3_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 0 > 0 -> (player_turn' = 1);
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 4 & player2_pokemon3_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 1 > 0 -> 0.75 : (player1_pokemon2_health' = player1_pokemon2_health - 1) & (player_turn' = 1) + 1-0.75 : (player_turn' = 1);
+
+	//p2p3 killshot p1p2
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 1 & player2_pokemon3_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 0 < 1 -> (player1_pokemon2_health' = 0) & (player_turn' = 1);
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 2 & player2_pokemon3_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 0 < 1 -> (player1_pokemon2_health' = 0) & (player_turn' = 1);
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 3 & player2_pokemon3_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 0 < 1 -> (player1_pokemon2_health' = 0) & (player_turn' = 1);
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 4 & player2_pokemon3_knocked = false & player1_pokemon_selection = 2 & player1_pokemon2_knocked = false & player_turn = 2 & player1_pokemon2_health - 1 < 1 -> 0.75 : (player1_pokemon2_health' = 0) & (player_turn' = 1) + 1-0.75 : (player_turn' = 1);
+
+	//player 2 pokemon 3 attacks player 1's third pokemon with each move
+	//just 0 damage
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 1 & player2_pokemon3_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 0 > 0 -> (player_turn' = 1);
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 2 & player2_pokemon3_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 0 > 0 -> (player_turn' = 1);
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 3 & player2_pokemon3_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 0 > 0 -> (player_turn' = 1);
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 4 & player2_pokemon3_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 0 > 0 -> (player_turn' = 1);
+
+	//p2p3 killshot p1p3
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 1 & player2_pokemon3_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 0 < 1 -> (player1_pokemon3_health' = 0) & (player_turn' = 1);
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 2 & player2_pokemon3_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 0 < 1 -> (player1_pokemon3_health' = 0) & (player_turn' = 1);
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 3 & player2_pokemon3_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 0 < 1 -> (player1_pokemon3_health' = 0) & (player_turn' = 1);
+	[player2_pokemon3_attacks] player2_pokemon_selection = 6 & player2_pokemon3_move_selected = 4 & player2_pokemon3_knocked = false & player1_pokemon_selection = 3 & player1_pokemon3_knocked = false & player_turn = 2 & player1_pokemon3_health - 0 < 1 -> (player1_pokemon3_health' = 0) & (player_turn' = 1);
+
+
+endmodule
+
+
+label "player1_wins" = (player1_pokemon1_knocked = false | player1_pokemon2_knocked = false | player1_pokemon3_knocked = false) & (player2_pokemon1_knocked = true & player2_pokemon2_knocked = true & player2_pokemon3_knocked = true);
+label "player2_wins" = (player2_pokemon1_knocked = false | player2_pokemon2_knocked = false | player2_pokemon3_knocked = false) & (player1_pokemon1_knocked = true & player1_pokemon2_knocked = true & player1_pokemon3_knocked = true);
+
+formula highest_health_player1 = max(player1_pokemon1_hp, player1_pokemon2_hp, player1_pokemon3_hp);
+formula highest_health_player2 = max(player2_pokemon1_hp, player2_pokemon2_hp, player2_pokemon3_hp);
+
+//leaving these formulas out because lowest health shouldn't be based off of attack stat, because attack stat would equal around 90, which would add a lot of state space for no reason, when the damage formula calculates actual damage to be a lot less
+//formula lowest_health_player1 = max(player2_pokemon1_attack, player2_pokemon2_attack, player2_pokemon3_attack);
+//formula lowest_health_player2 = max(player1_pokemon1_attack, player1_pokemon2_attack, player1_pokemon3_attack);

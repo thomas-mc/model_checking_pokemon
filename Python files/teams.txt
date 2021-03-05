@@ -1,0 +1,12 @@
+{"best_total":["Mewtwo","Dragonite","Moltres"],
+"most_type_advantages":["Rhydon","Articuno","Cloyster"],
+"most_type_disadvantages":["Dragonair","Mewtwo","Dragonite"],
+"typeadv_minus_typedis":["Articuno","Aerodactyl","Rhydon"],
+"type_effect_product":["Articuno","Aerodactyl","Jynx"],
+"type_effect_sum":["Articuno","Aerodactyl","Rhydon"],
+"total_multiplied_typeratio":["Mewtwo","Dragonite","Zapdos"],
+"total_plus_typeadv":["Rhydon","Articuno","Cloyster"],
+"total_minus_typedis":["Mewtwo","Dragonite","Dragonair"],
+"total_multiplied_typeproduct":["Articuno","Aerodactyl","Jynx"],
+"total_duplicate":["Mewtwo","Mewtwo","Mewtwo"],
+"type_duplicate":["Articuno","Articuno","Articuno"]}

@@ -1,0 +1,6 @@
+<<player1>> Pmax=? [ F "player1_wins" ]
+
+<<player2>> Pmax=? [ F "player2_wins" ]
+
+<<player1, player2>> Pmax = ? [ F "deadlock" & !"player1_wins" & !"player2_wins"]
+

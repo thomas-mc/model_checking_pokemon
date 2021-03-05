@@ -1,0 +1,431 @@
+dtmc
+
+//stats will be pre-written in python file
+const int Venusaur_hp = 80;
+const int Venusaur_attack = 82;
+const int Venusaur_defense = 83;
+const int Venusaur_special = 100;
+const int Venusaur_speed = 80;
+
+//turn integer will be established in python file based off speed
+const int Venusaur_turn = 3;
+
+const int Sandslash_hp = 75;
+const int Sandslash_attack = 100;
+const int Sandslash_defense = 110;
+const int Sandslash_special = 55;
+const int Sandslash_speed = 65;
+
+const int Sandslash_turn = 5;
+
+const int Nidoqueen_hp = 90;
+const int Nidoqueen_attack = 92;
+const int Nidoqueen_defense = 87;
+const int Nidoqueen_special = 75;
+const int Nidoqueen_speed = 76;
+
+const int Nidoqueen_turn = 4;
+
+const int Parasect_hp = 60;
+const int Parasect_attack = 95;
+const int Parasect_defense = 80;
+const int Parasect_special = 80;
+const int Parasect_speed = 30;
+
+const int Parasect_turn = 6;
+
+const int Arcanine_hp = 90;
+const int Arcanine_attack = 110;
+const int Arcanine_defense = 80;
+const int Arcanine_special = 80;
+const int Arcanine_speed = 95;
+
+const int Arcanine_turn = 1;
+
+const int Golbat_hp = 140;
+const int Golbat_attack = 70;
+const int Golbat_defense = 45;
+const int Golbat_special = 50;
+const int Golbat_speed = 90;
+
+const int Golbat_turn = 2;
+
+global turn : [1..6] init 1; //pokemon to make move
+
+//could use formula for this in future, but for now, lowest bound for health is just -50
+global player1_pokemon1_health : [-50..Venusaur_hp];
+global player1_pokemon2_health : [-50..Sandslash_hp];
+global player1_pokemon3_health : [-50..Nidoqueen_hp];
+global player2_pokemon1_health : [-50..Parasect_hp];
+global player2_pokemon2_health : [-50..Arcanine_hp];
+global player2_pokemon3_health : [-50..Golbat_hp];
+
+//will be used to properly iterate turn order, because after 6 has to go back to 1
+global turn_over : bool init false;
+
+
+//number notation of pokemon - not turn order, just team order
+const int player1_pokemon1_number = 1;
+const int player1_pokemon2_number = 2;
+const int player1_pokemon3_number = 3;
+const int player2_pokemon1_number = 4;
+const int player2_pokemon2_number = 5;
+const int player2_pokemon3_number = 6;
+
+const int player1_pokemon1_turn = Venusaur_turn;
+const int player1_pokemon2_turn = Sandslash_turn;
+const int player1_pokemon3_turn = Nidoqueen_turn;
+const int player2_pokemon1_turn = Parasect_turn;
+const int player2_pokemon2_turn = Arcanine_turn;
+const int player2_pokemon3_turn = Golbat_turn;
+
+
+//module for the player 1 pokemon 1 move
+//Venusaur
+module player1_pokemon1_move
+
+	//moves can be assigned relevant integer in python file
+	player1_pokemon1_move_selected : [1..4];
+	player1_pokemon1_target : [4..6];
+
+	//turn_over_player1_pokemon_1 : bool init false;
+
+	[pokemon_knocked_out_pokemon1_player1] turn = player1_pokemon1_turn & player1_pokemon1_health < 1 -> (turn_over' = true);
+
+	//move selection currently non-deterministic
+	[select_move] turn = player1_pokemon1_turn & turn_over = false -> 1/4 : (player1_pokemon1_move_selected' = 1) + 1/4 : (player1_pokemon1_move_selected' = 2) + 1/4 : (player1_pokemon1_move_selected' = 3) + 1/4 : (player1_pokemon1_move_selected' = 4);
+
+	[select_target] turn = player1_pokemon1_turn & turn_over = false -> 1/3 : (player1_pokemon1_target' = player2_pokemon1_number) + 1/3 : (player1_pokemon1_target' = player2_pokemon2_number) + 1/3 : (player1_pokemon1_target' = player2_pokemon3_number);
+
+	//things to think about for next time:
+	//i can do use move_accuracy as a probability in prism (i.e accuracy = 60 would be 0.6)
+
+	
+	//attacking parasect damage manually calculated for now (Venusaur is very uneffective)
+	//Tackle
+	[player1_pokemon1_attacks_player2_pokemon1_move1] turn = player1_pokemon1_turn & player1_pokemon1_move_selected = 1 & player1_pokemon1_target = player2_pokemon1_number & player2_pokemon1_health > 0 & turn_over= false -> 0.95 : (player2_pokemon1_health' = player2_pokemon1_health - 1) & (turn_over' = true) + 1 - 0.95 : (turn_over' = true);
+	//Vine Whip
+	[player1_pokemon1_attacks_player2_pokemon1_move2] turn = player1_pokemon1_turn & player1_pokemon1_move_selected = 2 & player1_pokemon1_target = player2_pokemon1_number & player2_pokemon1_health > 0 & turn_over = false -> (player2_pokemon1_health' = player2_pokemon1_health - 2) & (turn_over' = true);
+	//Razor Leaf
+	[player1_pokemon1_attacks_player2_pokemon1_move3] turn = player1_pokemon1_turn & player1_pokemon1_move_selected = 3 & player1_pokemon1_target = player2_pokemon1_number & player2_pokemon1_health > 0 & turn_over = false -> 0.95 : (player2_pokemon1_health' = player2_pokemon1_health - 4) & (turn_over' = true) + 1 - 0.95 : (turn_over' = true);
+	//Body Slam
+	[player1_pokemon1_attacks_player2_pokemon1_move4] turn = player1_pokemon1_turn & player1_pokemon1_move_selected = 4 & player1_pokemon1_target = player2_pokemon1_number & player2_pokemon1_health > 0 & turn_over = false -> (player2_pokemon3_health' = player2_pokemon3_health - 3) & (turn_over' = true);
+
+
+	//attacking arcanine
+	//Tackle (seems to be extremely inefffective against Arcanine)
+	[player1_pokemon1_attacks_player2_pokemon2_move1] turn = player1_pokemon1_turn & player1_pokemon1_move_selected = 1 & player1_pokemon1_target = player2_pokemon2_number & player2_pokemon2_health > 0 & turn_over = false -> 0.95 : (player2_pokemon2_health' = player2_pokemon2_health - 0) & (turn_over' = true) + 1 - 0.95 : (turn_over' = true);
+	//Vine Whip
+	[player1_pokemon1_attacks_player2_pokemon2_move2] turn = player1_pokemon1_turn & player1_pokemon1_move_selected = 2 & player1_pokemon1_target = player2_pokemon2_number & player2_pokemon2_health > 0 & turn_over = false -> (player2_pokemon2_health' = player2_pokemon2_health - 1) & (turn_over' = true);
+	//Razor Leaf
+	[player1_pokemon1_attacks_player2_pokemon2_move3] turn = player1_pokemon1_turn & player1_pokemon1_move_selected = 3 & player1_pokemon1_target = player2_pokemon2_number & player2_pokemon2_health > 0 & turn_over = false -> 0.95 : (player2_pokemon2_health' = player2_pokemon2_health - 2) & (turn_over' = true) + 1 - 0.95 : (turn_over' = true);
+	//Body Slam
+	[player1_pokemon1_attacks_player2_pokemon2_move4] turn = player1_pokemon1_turn & player1_pokemon1_move_selected = 4 & player1_pokemon1_target = player2_pokemon2_number & player2_pokemon2_health > 0 & turn_over = false -> (player2_pokemon2_health' = player2_pokemon2_health - 2) & (turn_over' = true);
+
+
+	//attacking Golbat
+	//Tackle
+	[player1_pokemon1_attacks_player2_pokemon3_move1] turn = player1_pokemon1_turn & player1_pokemon1_move_selected = 1 & player1_pokemon1_target = player2_pokemon3_number & player2_pokemon3_health > 0 & turn_over = false -> 0.95 : (player2_pokemon3_health' = player2_pokemon3_health - 1) & (turn_over' = true) + 1 - 0.95 : (turn_over' = true);
+	//Vine Whip
+	[player1_pokemon1_attacks_player2_pokemon3_move2] turn = player1_pokemon1_turn & player1_pokemon1_move_selected = 2 & player1_pokemon1_target = player2_pokemon3_number & player2_pokemon3_health > 0 & turn_over = false -> (player2_pokemon3_health' = player2_pokemon3_health - 2) & (turn_over' = true);
+	//Razor Leaf
+	[player1_pokemon1_attacks_player2_pokemon3_move3] turn = player1_pokemon1_turn & player1_pokemon1_move_selected = 3 & player1_pokemon1_target = player2_pokemon3_number & player2_pokemon3_health > 0 & turn_over = false -> 0.95 : (player2_pokemon3_health' = player2_pokemon3_health - 3) & (turn_over' = true) + 1 - 0.95 : (turn_over' = true);
+	//Body Slam
+	[player1_pokemon1_attacks_player2_pokemon3_move4] turn = player1_pokemon1_turn & player1_pokemon1_move_selected = 4 & player1_pokemon1_target = player2_pokemon3_number & player2_pokemon3_health > 0 & turn_over = false -> (player2_pokemon3_health' = player2_pokemon3_health - 4) & (turn_over' = true);
+
+
+	//could be a better way to do this, but this should be fine for now
+	[turn_passover] turn = 1 & turn_over = true -> (turn' = 2) & (turn_over' = false);
+	[turn_passover] turn = 2 & turn_over = true -> (turn' = 3) & (turn_over' = false);
+	[turn_passover] turn = 3 & turn_over = true -> (turn' = 4) & (turn_over' = false);
+	[turn_passover] turn = 4 & turn_over = true -> (turn' = 5) & (turn_over' = false);
+	[turn_passover] turn = 5 & turn_over = true -> (turn' = 6) & (turn_over' = false);
+	[turn_passover] turn = 6 & turn_over = true -> (turn' = 1) & (turn_over' = false);
+
+endmodule
+
+//Sandslash
+module player1_pokemon2_move
+
+	//moves can be assigned relevant integer in python file
+	player1_pokemon2_move_selected : [1..4];
+	player1_pokemon2_target : [4..6];
+
+	[pokemon_knocked_out] turn = player1_pokemon2_turn & player1_pokemon2_health < 1 -> (turn_over' = true);
+
+	[select_move] turn = player1_pokemon2_turn & turn_over = false -> 1/4 : (player1_pokemon2_move_selected' = 1) + 1/4 : (player1_pokemon2_move_selected' = 2) + 1/4 : (player1_pokemon2_move_selected' = 3) + 1/4 : (player1_pokemon2_move_selected' = 4);
+
+	[select_target] turn = player1_pokemon2_turn & turn_over = false -> 1/3 : (player1_pokemon2_target' = player2_pokemon1_number) + 1/3 : (player1_pokemon2_target' = player2_pokemon2_number) + 1/3 : (player1_pokemon2_target' = player2_pokemon3_number);
+
+	//all moves have 100 accuracy
+	//attacking parasect
+	//Scratch (really ineffective)
+	[player1_pokemon2_attacks] turn = player1_pokemon2_turn & player1_pokemon2_move_selected = 1 & player1_pokemon2_target = player2_pokemon1_number & player2_pokemon1_health > 0 & turn_over = false -> (player2_pokemon1_health' = player2_pokemon1_health - 0) & (turn_over' = true);
+	//Slash (really ineffective, seems Sandlash is just bad against parasect)
+	[player1_pokemon2_attacks] turn = player1_pokemon2_turn & player1_pokemon2_move_selected = 2 & player1_pokemon2_target = player2_pokemon1_number & player2_pokemon1_health > 0 & turn_over = false -> (player2_pokemon1_health' = player2_pokemon1_health - 0) & (turn_over' = true);
+	//Poison Sting (horrible)
+	[player1_pokemon2_attacks] turn = player1_pokemon2_turn & player1_pokemon2_move_selected = 3 & player1_pokemon2_target = player2_pokemon1_number & player2_pokemon1_health > 0 & turn_over = false -> (player2_pokemon1_health' = player2_pokemon1_health - 0) & (turn_over' = true);
+	//Body Slam
+	[player1_pokemon2_attacks] turn = player1_pokemon2_turn & player1_pokemon2_move_selected = 4 & player1_pokemon2_target = player2_pokemon1_number & player2_pokemon1_health > 0 & turn_over = false -> (player2_pokemon1_health' = player2_pokemon1_health - 1) & (turn_over' = true);
+
+
+	//attacking arcanine - Sandslash ground type has 2x type effectiveness against Arcanine fire type
+	//Scratch
+	[player1_pokemon2_attacks] turn = player1_pokemon2_turn & player1_pokemon2_move_selected = 1 & player1_pokemon2_target = player2_pokemon2_number & player2_pokemon2_health > 0 & turn_over = false -> (player2_pokemon2_health' = player2_pokemon2_health - 4) & (turn_over' = true);
+	//Slash
+	[player1_pokemon2_attacks] turn = player1_pokemon2_turn & player1_pokemon2_move_selected = 2 & player1_pokemon2_target = player2_pokemon2_number & player2_pokemon2_health > 0 & turn_over = false -> (player2_pokemon2_health' = player2_pokemon2_health - 8) & (turn_over' = true);
+	//Poison Sting
+	[player1_pokemon2_attacks] turn = player1_pokemon2_turn & player1_pokemon2_move_selected = 3 & player1_pokemon2_target = player2_pokemon2_number & player2_pokemon2_health > 0 & turn_over = false -> (player2_pokemon2_health' = player2_pokemon2_health - 1) & (turn_over' = true);
+	//Body Slam
+	[player1_pokemon2_attacks] turn = player1_pokemon2_turn & player1_pokemon2_move_selected = 4 & player1_pokemon2_target = player2_pokemon2_number & player2_pokemon2_health > 0 & turn_over = false -> (player2_pokemon2_health' = player2_pokemon2_health - 9) & (turn_over' = true);
+
+
+	//attacking Golbat - Sandslash GROUND has 0x effectiveness against Golbat FLYING
+	//Scratch
+	[player1_pokemon2_attacks] turn = player1_pokemon2_turn & player1_pokemon2_move_selected = 1 & player1_pokemon2_target = player2_pokemon3_number & player2_pokemon3_health > 0 & turn_over = false -> (player2_pokemon3_health' = player2_pokemon3_health - 0) & (turn_over' = true);
+	//Slash
+	[player1_pokemon2_attacks] turn = player1_pokemon2_turn & player1_pokemon2_move_selected = 2 & player1_pokemon2_target = player2_pokemon3_number & player2_pokemon3_health > 0 & turn_over = false -> (player2_pokemon3_health' = player2_pokemon3_health - 0) & (turn_over' = true);
+	//Poison Sting
+	[player1_pokemon2_attacks] turn = player1_pokemon2_turn & player1_pokemon2_move_selected = 3 & player1_pokemon2_target = player2_pokemon3_number & player2_pokemon3_health > 0 & turn_over = false -> (player2_pokemon3_health' = player2_pokemon3_health - 0) & (turn_over' = true);
+	//Body Slam
+	[player1_pokemon2_attacks] turn = player1_pokemon2_turn & player1_pokemon2_move_selected = 4 & player1_pokemon2_target = player2_pokemon3_number & player2_pokemon3_health > 0 & turn_over = false -> (player2_pokemon3_health' = player2_pokemon3_health - 0) & (turn_over' = true);
+
+
+	//could be a better way to do this, but this should be fine for now
+	[turn_passover] turn = 1 & turn_over = true -> (turn' = 2) & (turn_over' = false);
+	[turn_passover] turn = 2 & turn_over = true -> (turn' = 3) & (turn_over' = false);
+	[turn_passover] turn = 3 & turn_over = true -> (turn' = 4) & (turn_over' = false);
+	[turn_passover] turn = 4 & turn_over = true -> (turn' = 5) & (turn_over' = false);
+	[turn_passover] turn = 5 & turn_over = true -> (turn' = 6) & (turn_over' = false);
+	[turn_passover] turn = 6 & turn_over = true -> (turn' = 1) & (turn_over' = false);
+
+endmodule
+
+//Nidoqueen
+module player1_pokemon3_move
+
+	//moves can be assigned relevant integer in python file
+	player1_pokemon3_move_selected : [1..4];
+	player1_pokemon3_target : [4..6];
+
+	[pokemon_knocked_out] turn = player1_pokemon3_turn & player1_pokemon3_health < 1 -> (turn_over' = true);
+
+	[select_move] turn = player1_pokemon3_turn & turn_over = false -> 1/4 : (player1_pokemon3_move_selected' = 1) + 1/4 : (player1_pokemon3_move_selected' = 2) + 1/4 : (player1_pokemon3_move_selected' = 3) + 1/4 : (player1_pokemon3_move_selected' = 4);
+
+	[select_target] turn = player1_pokemon3_turn & turn_over = false -> 1/3 : (player1_pokemon3_target' = player2_pokemon1_number) + 1/3 : (player1_pokemon3_target' = player2_pokemon2_number) + 1/3 : (player1_pokemon3_target' = player2_pokemon3_number);
+
+	//attacking parasect
+	//Tackle
+	[player1_pokemon3_attacks] turn = player1_pokemon3_turn & player1_pokemon3_move_selected = 1 & player1_pokemon3_target = player2_pokemon1_number & player2_pokemon1_health > 0 & turn_over = false -> 0.95 : (player2_pokemon1_health' = player2_pokemon1_health - 1) & (turn_over' = true) + 1 - 0.95 : (turn_over' = true);
+	//Scratch
+	[player1_pokemon3_attacks] turn = player1_pokemon3_turn & player1_pokemon3_move_selected = 2 & player1_pokemon3_target = player2_pokemon1_number & player2_pokemon1_health > 0 & turn_over = false -> (player2_pokemon1_health' = player2_pokemon1_health - 2) & (turn_over' = true);
+	//Body Slam
+	[player1_pokemon3_attacks] turn = player1_pokemon3_turn & player1_pokemon2_move_selected = 3 & player1_pokemon3_target = player2_pokemon1_number & player2_pokemon1_health > 0 & turn_over = false -> (player2_pokemon1_health' = player2_pokemon1_health - 4) & (turn_over' = true);
+	//Earthquake
+	[player1_pokemon3_attacks] turn = player1_pokemon3_turn & player1_pokemon2_move_selected = 4 & player1_pokemon3_target = player2_pokemon1_number & player2_pokemon1_health > 0 & turn_over = false -> (player2_pokemon1_health' = player2_pokemon1_health - 8) & (turn_over' = true);
+
+
+	//attacking arcanine
+	//Tackle
+	[player1_pokemon3_attacks] turn = player1_pokemon3_turn & player1_pokemon3_move_selected = 1 & player1_pokemon3_target = player2_pokemon2_number & player2_pokemon2_health > 0 & turn_over = false -> 0.95 : (player2_pokemon2_health' = player2_pokemon2_health - 3) & (turn_over' = true) + 1 - 0.95 : (turn_over' = true);
+	//Scratch
+	[player1_pokemon3_attacks] turn = player1_pokemon3_turn & player1_pokemon3_move_selected = 2 & player1_pokemon3_target = player2_pokemon2_number & player2_pokemon2_health > 0 & turn_over = false -> (player2_pokemon2_health' = player2_pokemon2_health - 4) & (turn_over' = true);
+	//Body Slam
+	[player1_pokemon3_attacks] turn = player1_pokemon3_turn & player1_pokemon3_move_selected = 3 & player1_pokemon3_target = player2_pokemon2_number & player2_pokemon2_health > 0 & turn_over = false -> (player2_pokemon2_health' = player2_pokemon2_health - 9) & (turn_over' = true);
+	//Earthquake
+	[player1_pokemon3_attacks] turn = player1_pokemon3_turn & player1_pokemon3_move_selected = 4 & player1_pokemon3_target = player2_pokemon2_number & player2_pokemon2_health > 0 & turn_over = false -> (player2_pokemon2_health' = player2_pokemon2_health - 15) & (turn_over' = true);
+
+
+	//attacking Golbat - Nidoqueen is GROUND type, Golbat is FLYING - 0x effectiveness
+	//Tackle
+	[player1_pokemon3_attacks] turn = player1_pokemon3_turn & player1_pokemon3_move_selected = 1 & player1_pokemon3_target = player2_pokemon3_number & player2_pokemon3_health > 0 & turn_over = false -> 0.95 : (player2_pokemon3_health' = player2_pokemon3_health - 0) & (turn_over' = true) + 1 - 0.95 : (turn_over' = true);
+	//Scratch
+	[player1_pokemon3_attacks] turn = player1_pokemon3_turn & player1_pokemon3_move_selected = 2 & player1_pokemon3_target = player2_pokemon3_number & player2_pokemon3_health > 0 & turn_over = false -> (player2_pokemon3_health' = player2_pokemon3_health - 0) & (turn_over' = true);
+	//Body Slam
+	[player1_pokemon3_attacks] turn = player1_pokemon3_turn & player1_pokemon3_move_selected = 3 & player1_pokemon3_target = player2_pokemon3_number & player2_pokemon3_health > 0 & turn_over = false -> (player2_pokemon3_health' = player2_pokemon3_health - 0) & (turn_over' = true);
+	//Earthquake
+	[player1_pokemon3_attacks] turn = player1_pokemon3_turn & player1_pokemon3_move_selected = 4 & player1_pokemon3_target = player2_pokemon3_number & player2_pokemon3_health > 0 & turn_over = false -> (player2_pokemon3_health' = player2_pokemon3_health - 0) & (turn_over' = true);
+
+
+	//could be a better way to do this, but this should be fine for now
+	[turn_passover] turn = 1 & turn_over = true -> (turn' = 2) & (turn_over' = false);
+	[turn_passover] turn = 2 & turn_over = true -> (turn' = 3) & (turn_over' = false);
+	[turn_passover] turn = 3 & turn_over = true -> (turn' = 4) & (turn_over' = false);
+	[turn_passover] turn = 4 & turn_over = true -> (turn' = 5) & (turn_over' = false);
+	[turn_passover] turn = 5 & turn_over = true -> (turn' = 6) & (turn_over' = false);
+	[turn_passover] turn = 6 & turn_over = true -> (turn' = 1) & (turn_over' = false);
+
+endmodule
+
+//Parasect
+module player2_pokemon1_move
+
+	//moves can be assigned relevant integer in python file
+	player2_pokemon1_move_selected : [1..4];
+	player2_pokemon1_target : [1..3];
+
+	[pokemon_knocked_out] turn = player2_pokemon1_turn & player2_pokemon1_health < 1 -> (turn_over' = true);
+
+	[select_move] turn = player2_pokemon1_turn & turn_over = false -> 1/4 : (player2_pokemon1_move_selected' = 1) + 1/4 : (player2_pokemon1_move_selected' = 2) + 1/4 : (player2_pokemon1_move_selected' = 3) + 1/4 : (player2_pokemon1_move_selected' = 4);
+
+	[select_target] turn = player2_pokemon1_turn & turn_over = false -> 1/3 : (player2_pokemon1_target' = player1_pokemon1_number) + 1/3 : (player2_pokemon1_target' = player1_pokemon2_number) + 1/3 : (player2_pokemon1_target' = player1_pokemon3_number);
+
+	//all moves have 100 accuracy
+	//attacking venusaur
+	//Scratch
+	[player2_pokemon1_attacks] turn = player2_pokemon1_turn & player2_pokemon1_move_selected = 1 & player2_pokemon1_target = player1_pokemon1_number & player1_pokemon1_health > 0 & turn_over = false -> (player1_pokemon1_health' = player1_pokemon1_health - 2) & (turn_over' = true);
+	//Leech Life
+	[player2_pokemon1_attacks] turn = player2_pokemon1_turn & player2_pokemon1_move_selected = 2 & player2_pokemon1_target = player1_pokemon1_number & player1_pokemon1_health > 0 & turn_over = false -> (player1_pokemon1_health' = player1_pokemon1_health - 1) & (turn_over' = true);
+	//Solar Beam
+	[player2_pokemon1_attacks] turn = player2_pokemon1_turn & player2_pokemon1_move_selected = 3 & player2_pokemon1_target = player1_pokemon1_number & player1_pokemon1_health > 0 & turn_over = false -> (player1_pokemon1_health' = player1_pokemon1_health - 9) & (turn_over' = true);
+	//Body Slam
+	[player2_pokemon1_attacks] turn = player2_pokemon1_turn & player2_pokemon1_move_selected = 4 & player2_pokemon1_target = player1_pokemon1_number & player1_pokemon1_health > 0 & turn_over = false -> (player1_pokemon1_health' = player1_pokemon1_health - 4) & (turn_over' = true);
+
+
+	//attacking sandslash
+	//Scratch
+	[player2_pokemon1_attacks] turn = player2_pokemon1_turn & player2_pokemon1_move_selected = 1 & player2_pokemon1_target = player1_pokemon2_number & player1_pokemon2_health > 0 & turn_over = false -> (player1_pokemon1_health' = player1_pokemon2_health - 3) & (turn_over' = true);
+	//Leech Life
+	[player2_pokemon1_attacks] turn = player2_pokemon1_turn & player2_pokemon1_move_selected = 2 & player2_pokemon1_target = player1_pokemon2_number & player1_pokemon2_health > 0 & turn_over = false -> (player1_pokemon2_health' = player1_pokemon2_health - 2) & (turn_over' = true);
+	//Solar Beam
+	[player2_pokemon1_attacks] turn = player2_pokemon1_turn & player2_pokemon1_move_selected = 3 & player2_pokemon1_target = player1_pokemon2_number & player1_pokemon2_health > 0 & turn_over = false -> (player1_pokemon2_health' = player1_pokemon2_health - 14) & (turn_over' = true);
+	//Body Slam
+	[player2_pokemon1_attacks] turn = player2_pokemon1_turn & player2_pokemon1_move_selected = 4 & player2_pokemon1_target = player1_pokemon2_number & player1_pokemon2_health > 0 & turn_over = false -> (player1_pokemon2_health' = player1_pokemon2_health - 6) & (turn_over' = true);
+
+
+	//attacking nidoqueen
+	//Scratch
+	[player2_pokemon1_attacks] turn = player2_pokemon1_turn & player2_pokemon1_move_selected = 1 & player2_pokemon1_target = player1_pokemon3_number & player1_pokemon3_health > 0 & turn_over = false -> (player1_pokemon1_health' = player1_pokemon3_health - 4) & (turn_over' = true);
+	//Leech Life
+	[player2_pokemon1_attacks] turn = player2_pokemon1_turn & player2_pokemon1_move_selected = 2 & player2_pokemon1_target = player1_pokemon3_number & player1_pokemon3_health > 0 & turn_over = false -> (player1_pokemon3_health' = player1_pokemon3_health - 2) & (turn_over' = true);
+	//Solar Beam
+	[player2_pokemon1_attacks] turn = player2_pokemon1_turn & player2_pokemon1_move_selected = 3 & player2_pokemon1_target = player1_pokemon3_number & player1_pokemon3_health > 0 & turn_over = false -> (player1_pokemon3_health' = player1_pokemon3_health - 17) & (turn_over' = true);
+	//Body Slam
+	[player2_pokemon1_attacks] turn = player2_pokemon1_turn & player2_pokemon1_move_selected = 4 & player2_pokemon1_target = player1_pokemon3_number & player1_pokemon3_health > 0 & turn_over = false -> (player1_pokemon3_health' = player1_pokemon3_health - 8) & (turn_over' = true);
+
+
+	//could be a better way to do this, but this should be fine for now
+	[turn_passover] turn = 1 & turn_over = true -> (turn' = 2) & (turn_over' = false);
+	[turn_passover] turn = 2 & turn_over = true -> (turn' = 3) & (turn_over' = false);
+	[turn_passover] turn = 3 & turn_over = true -> (turn' = 4) & (turn_over' = false);
+	[turn_passover] turn = 4 & turn_over = true -> (turn' = 5) & (turn_over' = false);
+	[turn_passover] turn = 5 & turn_over = true -> (turn' = 6) & (turn_over' = false);
+	[turn_passover] turn = 6 & turn_over = true -> (turn' = 1) & (turn_over' = false);
+
+endmodule
+
+//Arcanine
+module player2_pokemon2_move
+
+	//moves can be assigned relevant integer in python file
+	player2_pokemon2_move_selected : [1..4];
+	player2_pokemon2_target : [1..3];
+
+	[pokemon_knocked_out] turn = player2_pokemon2_turn & player2_pokemon2_health < 1 -> (turn_over' = true);
+
+	[select_move] turn = player2_pokemon2_turn & turn_over = false -> 1/4 : (player2_pokemon2_move_selected' = 1) + 1/4 : (player2_pokemon2_move_selected' = 2) + 1/4 : (player2_pokemon2_move_selected' = 3) + 1/4 : (player2_pokemon2_move_selected' = 4);
+
+	[select_target] turn = player2_pokemon2_turn & turn_over = false -> 1/3 : (player2_pokemon2_target' = player1_pokemon1_number) + 1/3 : (player2_pokemon2_target' = player1_pokemon2_number) + 1/3 : (player2_pokemon2_target' = player1_pokemon3_number);
+
+	//attacking venusaur
+	//Ember
+	[player2_pokemon2_attacks] turn = player2_pokemon2_turn & player2_pokemon2_move_selected = 1 & player2_pokemon2_target = player1_pokemon1_number & player1_pokemon1_health > 0 & turn_over = false -> (player1_pokemon1_health' = player1_pokemon1_health - 6) & (turn_over' = true);
+	//Body Slam
+	[player2_pokemon2_attacks] turn = player2_pokemon2_turn & player2_pokemon2_move_selected = 2 & player2_pokemon2_target = player1_pokemon1_number & player1_pokemon1_health > 0 & turn_over = false -> (player1_pokemon1_health' = player1_pokemon1_health - 9) & (turn_over' = true);
+	//Dig
+	[player2_pokemon2_attacks] turn = player2_pokemon2_turn & player2_pokemon2_move_selected = 3 & player2_pokemon2_target = player1_pokemon1_number & player1_pokemon1_health > 0 & turn_over = false -> 0.75 : (player1_pokemon1_health' = player1_pokemon1_health - 11) & (turn_over' = true) + 1-0.75 : (turn_over' = true);
+	//Take Down
+	[player2_pokemon2_attacks] turn = player2_pokemon2_turn & player2_pokemon2_move_selected = 4 & player2_pokemon2_target = player1_pokemon1_number & player1_pokemon1_health > 0 & turn_over = false -> 0.85 : (player1_pokemon1_health' = player1_pokemon1_health - 10) & (turn_over' = true) + 1-0.85 : (turn_over' = true);
+
+
+	//attacking sandslash
+	//Ember
+	[player2_pokemon2_attacks] turn = player2_pokemon2_turn & player2_pokemon2_move_selected = 1 & player2_pokemon2_target = player1_pokemon2_number & player1_pokemon2_health > 0 & turn_over = false -> (player1_pokemon2_health' = player1_pokemon2_health - 2) & (turn_over' = true);
+	//Body Slam
+	[player2_pokemon2_attacks] turn = player2_pokemon2_turn & player2_pokemon2_move_selected = 2 & player2_pokemon2_target = player1_pokemon2_number & player1_pokemon2_health > 0 & turn_over = false -> (player1_pokemon2_health' = player1_pokemon2_health - 3) & (turn_over' = true);
+	//Dig
+	[player2_pokemon2_attacks] turn = player2_pokemon2_turn & player2_pokemon2_move_selected = 3 & player2_pokemon2_target = player1_pokemon2_number & player1_pokemon2_health > 0 & turn_over = false -> 0.75 : (player1_pokemon2_health' = player1_pokemon2_health - 4) & (turn_over' = true) + 1-0.75 : (turn_over' = true);
+	//Take Down
+	[player2_pokemon2_attacks] turn = player2_pokemon2_turn & player2_pokemon2_move_selected = 4 & player2_pokemon2_target = player1_pokemon2_number & player1_pokemon2_health > 0 & turn_over = false -> 0.85 : (player1_pokemon2_health' = player1_pokemon2_health - 3) & (turn_over' = true) + 1-0.85 : (turn_over' = true);
+
+
+	//attacking nidoqueen
+	//Ember
+	[player2_pokemon2_attacks] turn = player2_pokemon2_turn & player2_pokemon2_move_selected = 1 & player2_pokemon2_target = player1_pokemon3_number & player1_pokemon3_health > 0 & turn_over = false -> (player1_pokemon3_health' = player1_pokemon3_health - 3) & (turn_over' = true);
+	//Body Slam
+	[player2_pokemon2_attacks] turn = player2_pokemon2_turn & player2_pokemon2_move_selected = 2 & player2_pokemon2_target = player1_pokemon3_number & player1_pokemon3_health > 0 & turn_over = false -> (player1_pokemon3_health' = player1_pokemon3_health - 4) & (turn_over' = true);
+	//Dig
+	[player2_pokemon2_attacks] turn = player2_pokemon2_turn & player2_pokemon2_move_selected = 3 & player2_pokemon2_target = player1_pokemon3_number & player1_pokemon3_health > 0 & turn_over = false -> 0.75 : (player1_pokemon3_health' = player1_pokemon3_health - 5) & (turn_over' = true) + 1-0.75 : (turn_over' = true);
+	//Take Down
+	[player2_pokemon2_attacks] turn = player2_pokemon2_turn & player2_pokemon2_move_selected = 4 & player2_pokemon2_target = player1_pokemon3_number & player1_pokemon3_health > 0 & turn_over = false -> 0.85 : (player1_pokemon3_health' = player1_pokemon3_health - 5) & (turn_over' = true) + 1-0.85 : (turn_over' = true);
+
+
+	//could be a better way to do this, but this should be fine for now
+	[turn_passover] turn = 1 & turn_over = true -> (turn' = 2) & (turn_over' = false);
+	[turn_passover] turn = 2 & turn_over = true -> (turn' = 3) & (turn_over' = false);
+	[turn_passover] turn = 3 & turn_over = true -> (turn' = 4) & (turn_over' = false);
+	[turn_passover] turn = 4 & turn_over = true -> (turn' = 5) & (turn_over' = false);
+	[turn_passover] turn = 5 & turn_over = true -> (turn' = 6) & (turn_over' = false);
+	[turn_passover] turn = 6 & turn_over = true -> (turn' = 1) & (turn_over' = false);
+
+endmodule
+
+//Golbat
+module player2_pokemon3_move
+
+	//moves can be assigned relevant integer in python file
+	player2_pokemon3_move_selected : [1..4];
+	player2_pokemon3_target : [1..3];
+
+	[pokemon_knocked_out] turn = player2_pokemon3_turn & player2_pokemon3_health < 1 -> (turn_over' = true);
+
+	[select_move] turn = player2_pokemon3_turn & turn_over = false -> 1/4 : (player2_pokemon3_move_selected' = 1) + 1/4 : (player2_pokemon3_move_selected' = 2) + 1/4 : (player2_pokemon3_move_selected' = 3) + 1/4 : (player2_pokemon3_move_selected' = 4);
+
+	[select_target] turn = player2_pokemon3_turn & turn_over = false -> 1/3 : (player2_pokemon3_target' = player1_pokemon1_number) + 1/3 : (player2_pokemon3_target' = player1_pokemon2_number) + 1/3 : (player2_pokemon3_target' = player1_pokemon3_number);
+
+	//attacking venusaur
+	//Leech Life
+	[player2_pokemon3_attacks] turn = player2_pokemon3_turn & player2_pokemon3_move_selected = 1 & player2_pokemon3_target = player1_pokemon1_number & player1_pokemon1_health > 0 & turn_over = false -> (player1_pokemon1_health' = player1_pokemon1_health - 1) & (turn_over' = true);
+	//Bite
+	[player2_pokemon3_attacks] turn = player2_pokemon3_turn & player2_pokemon3_move_selected = 2 & player2_pokemon3_target = player1_pokemon1_number & player1_pokemon1_health > 0 & turn_over = false -> (player1_pokemon1_health' = player1_pokemon1_health - 2) & (turn_over' = true);
+	//Wing Attack
+	[player2_pokemon3_attacks] turn = player2_pokemon3_turn & player2_pokemon3_move_selected = 3 & player2_pokemon3_target = player1_pokemon1_number & player1_pokemon1_health > 0 & turn_over = false -> (player1_pokemon1_health' = player1_pokemon1_health - 4) & (turn_over' = true);
+	//Razor Wind
+	[player2_pokemon3_attacks] turn = player2_pokemon3_turn & player2_pokemon3_move_selected = 4 & player2_pokemon3_target = player1_pokemon1_number & player1_pokemon1_health > 0 & turn_over = false -> 0.75 : (player1_pokemon1_health' = player1_pokemon1_health - 6) & (turn_over' = true) + 1-0.75 : (turn_over' = true);
+
+
+	//attacking sandslash
+	//Leech Life
+	[player2_pokemon3_attacks] turn = player2_pokemon3_turn & player2_pokemon3_move_selected = 1 & player2_pokemon3_target = player1_pokemon2_number & player1_pokemon2_health > 0 & turn_over = false -> (player1_pokemon2_health' = player1_pokemon2_health - 0) & (turn_over' = true);
+	//Bite
+	[player2_pokemon3_attacks] turn = player2_pokemon3_turn & player2_pokemon3_move_selected = 2 & player2_pokemon3_target = player1_pokemon2_number & player1_pokemon2_health > 0 & turn_over = false -> (player1_pokemon2_health' = player1_pokemon2_health - 0) & (turn_over' = true);
+	//Wing Attack
+	[player2_pokemon3_attacks] turn = player2_pokemon3_turn & player2_pokemon3_move_selected = 3 & player2_pokemon3_target = player1_pokemon2_number & player1_pokemon2_health > 0 & turn_over = false -> (player1_pokemon2_health' = player1_pokemon2_health - 0) & (turn_over' = true);
+	//Razor Wind
+	[player2_pokemon3_attacks] turn = player2_pokemon3_turn & player2_pokemon3_move_selected = 4 & player2_pokemon3_target = player1_pokemon2_number & player1_pokemon2_health > 0 & turn_over = false -> 0.75 : (player1_pokemon2_health' = player1_pokemon2_health - 1) & (turn_over' = true) + 1-0.75 : (turn_over' = true);
+
+
+	//attacking nidoqueen
+	//Leech Life
+	[player2_pokemon3_attacks] turn = player2_pokemon3_turn & player2_pokemon3_move_selected = 1 & player2_pokemon3_target = player1_pokemon3_number & player1_pokemon3_health > 0 & turn_over = false -> (player1_pokemon3_health' = player1_pokemon3_health - 0) & (turn_over' = true);
+	//Bite
+	[player2_pokemon3_attacks] turn = player2_pokemon3_turn & player2_pokemon3_move_selected = 2 & player2_pokemon3_target = player1_pokemon3_number & player1_pokemon3_health > 0 & turn_over = false -> (player1_pokemon3_health' = player1_pokemon3_health - 0) & (turn_over' = true);
+	//Wing Attack
+	[player2_pokemon3_attacks] turn = player2_pokemon3_turn & player2_pokemon3_move_selected = 3 & player2_pokemon3_target = player1_pokemon3_number & player1_pokemon3_health > 0 & turn_over = false -> (player1_pokemon3_health' = player1_pokemon3_health - 0) & (turn_over' = true);
+	//Razor Wind
+	[player2_pokemon3_attacks] turn = player2_pokemon3_turn & player2_pokemon3_move_selected = 4 & player2_pokemon3_target = player1_pokemon3_number & player1_pokemon3_health > 0 & turn_over = false -> 0.75 : (player1_pokemon3_health' = player1_pokemon3_health - 0) & (turn_over' = true) + 1-0.75 : (turn_over' = true);
+
+
+	//could be a better way to do this, but this should be fine for now
+	[turn_passover] turn = 1 & turn_over = true -> (turn' = 2) & (turn_over' = false);
+	[turn_passover] turn = 2 & turn_over = true -> (turn' = 3) & (turn_over' = false);
+	[turn_passover] turn = 3 & turn_over = true -> (turn' = 4) & (turn_over' = false);
+	[turn_passover] turn = 4 & turn_over = true -> (turn' = 5) & (turn_over' = false);
+	[turn_passover] turn = 5 & turn_over = true -> (turn' = 6) & (turn_over' = false);
+	[turn_passover] turn = 6 & turn_over = true -> (turn' = 1) & (turn_over' = false);
+
+endmodule
+
+label "player1_wins" = (player1_pokemon1_health > 0 | player1_pokemon2_health > 0 | player1_pokemon3_health > 0) & (player2_pokemon1_health < 1 | player2_pokemon2_health < 1 | player2_pokemon3_health < 1);
+label "player2_wins" = (player2_pokemon1_health > 0 | player2_pokemon2_health > 0 | player2_pokemon3_health > 0) & (player1_pokemon1_health < 1 | player1_pokemon2_health < 1 | player1_pokemon3_health < 1);
+

@@ -1,0 +1,702 @@
+{
+  "Rage": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Fury Swipes": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Spike Cannon": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "SolarBeam": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Solar Beam": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Minimize": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Psybeam": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Smokescreen": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Fire Spin": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Bite": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Whirlwind": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Wing Attack": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Tri Attack": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Supersonic": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Focus Energy": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Teleport": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Slash": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Sludge": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Sleep Powder": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Barrage": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Sonic Boom": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Withdraw": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Razor Leaf": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Strength": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Bind": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Thunderbolt": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Aurora Beam": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Hydro Pump": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Stun Spore": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Psywave": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Fissure": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Amnesia": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Constrict": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Rock Slide": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Night Shade": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Karate Chop": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Pay Day": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Seismic Toss": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Peck": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Double Team": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Sand-Attack": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Acid Armor": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Flash": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Thunder": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Self-Destruct": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Egg Bomb": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Meditate": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Mega Kick": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Take Down": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Barrier": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Body Slam": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Drill Peck": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Dragon Rage": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Harden": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Guillotine": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Fury Attack": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Stomp": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Sky Attack": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Spore": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Quick Attack": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Swords Dance": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Dig": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Skull Bash": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Tackle": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Mega Drain": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Reflect": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Pin Missile": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Rest": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Mimic": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Screech": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Acid": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Smog": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Bubble": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Horn Drill": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Roar": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Haze": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Thunder Wave": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Explosion": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Thrash": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Bide": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Leech Life": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Defense Curl": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Fly": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Surf": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Recover": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Growl": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Leer": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Thunder Shock": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Ice Punch": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Leech Seed": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Double-Edge": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Dream Eater": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Lick": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Earthquake": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Agility": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Counter": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Sing": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Pound": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Vise Grip": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Ice Beam": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Bubble Beam": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Disable": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Mega Punch": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Wrap": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Absorb": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Scratch": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Poison Sting": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Hypnosis": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Low Kick": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Double Kick": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Splash": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Confusion": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Poison Powder": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Flamethrower": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Toxic": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Submission": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Confuse Ray": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Lovely Kiss": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Cut": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Blizzard": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Slam": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Sel-Destruct": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Tail Whip": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Mist": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Vine Whip": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Psychic": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Razor Wind": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Light Screen": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Ember": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Water Gun": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Swift": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Hyper Beam": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Double Slap": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Horn Attack": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Metronome": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Substitute": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Sand Attack": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Fire Blast": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Clamp": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  },
+  "Growth": {
+    "type": "Normal",
+    "Power": 0,
+    "Accuracy": 0
+  }
+}

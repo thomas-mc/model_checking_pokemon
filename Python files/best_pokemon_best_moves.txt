@@ -1,0 +1,12 @@
+{"Mewtwo":["Psychic", "Hyper Beam", "Self-Destruct", "Blizzard"],
+"Dragonite":["Hyper Beam", "Blizzard", "Thunder", "Fire Blast"],
+"Moltres":["Fire blast", "Sky Attack", "Hyper Beam", "Double-Edge"],
+"Rhydon":["Earthquake", "Rock Slide", "Hyper Beam", "Blizzard"],
+"Articuno":["Sky Attack", "Blizzard", "Hyper Beam", "Double-Edge"],
+"Cloyster":["Surf", "Blizzard", "Explosion", "Hyper Beam"],
+"Dragonair":["Blizzard", "Thunder", "Fire Blast", "Skull Bash"],
+"Aerodactyl":["Sky Attack", "Hyper Beam", "Fire Blast", "Double-Edge"],
+"Jynx":["Blizzard", "Psychic", "Hyper Beam", "Mega Kick"],
+"Zapdos":["Sky Attack", "Thunder", "Hyper Beam", "Double-Edge"],
+"Mew":["Psychic", "Explosion", "Hyper Beam", "Self-Destruct"],
+"Gyarados":["Hydro Pump", "Hyper Beam", "Blizzard", "Fire Blast"]}
