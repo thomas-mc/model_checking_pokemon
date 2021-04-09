@@ -1,6 +1,6 @@
 # Readme
 
-Put a brief description of your code here. This should at least describe the file structure.
+## File Structure
 * best_moves_stats.json contains the necessary data for all of the moves involved in the model generation with this specific set of Pokemon
 * best_pokemon_best_moves.txt contains the list of 4 moves that correspond to each Pokemon that is in use in this implementation
 * best_pokemon_by_type_LEGENDS.py prints out lists of Pokemon ordered by the coded metrics, this file involves legendary Pokemon
@@ -21,7 +21,7 @@ Put a brief description of your code here. This should at least describe the fil
 
 ## Instructions
 
-* ***IMPORTANT*** file paths in the Python files must be changed to match your own correct paths, only up to the point of the 'src' folder should be changed. The following file names and line numbers denote where these changes should be made:
+* ***IMPORTANT:*** file paths in the Python files must be changed to match your own correct paths, only up to the point of the 'src' folder should be changed. The following file names and line numbers denote where these changes should be made:
   * best_pokemon_by_type_LEGENDS.py - line 4, line 63
   * best_pokemon_by_type_NO_LEGENDS.py - line 4, line 63
   * best_pokemon_by_type_NO_SPEED.py - line 4, line 63
@@ -36,11 +36,17 @@ Put a brief description of your code here. This should at least describe the fil
 * To generate the models for the Pokemon battle between the two strongest teams, execute prism_model_script_final_winners.py
 * To build a PRISM model, open the PRISM command line, and run the following command:
   prism total_duplicate_legend_VERSUS_team_of_interest_no_speed.prism p1vp2_winner_props.props -prop 1 -nopre
+
   This would build the model 'total_duplicate_legend_VERSUS_team_of_interest_no_speed.prism' and verify the first property of the file 'p1vp2_winner_props.props'.
+
   prop 1 = player 1 win
+
   prop 2 = player 2 win
+
   prop 3 = deadlock check
+
   Given that the PRISM command line opens on the bin directory of PRISM, it may be useful to insert the models of interest into the PRISM program file folder, and in the command navigate to the files. This would look like:
+  
   prism ..\prism-examples\pokemon_new\total_duplicate_legend_VERSUS_team_of_interest_no_speed.prism ..\prism-examples\pokemon_new\p1vp2_winner_props.props -prop 1 -nopre
 
 
