@@ -1,5 +1,6 @@
 # Readme
 
+If, after reading this file, anything is unclear, please contact me.
 ## File Structure
 * best_moves_stats.json contains the necessary data for all of the moves involved in the model generation with this specific set of Pokemon
 * best_pokemon_best_moves.txt contains the list of 4 moves that correspond to each Pokemon that is in use in this implementation
@@ -35,6 +36,7 @@
 * To generate the models for the Pokemon battles excluding legendary Pokemon, execute prism_model_script_final_no_legends.py
 * To generate the models for the Pokemon battle between the two strongest teams, execute prism_model_script_final_winners.py
 * To build a PRISM model, open the PRISM command line, and run the following command:
+
   prism total_duplicate_legend_VERSUS_team_of_interest_no_speed.prism p1vp2_winner_props.props -prop 1 -nopre
 
   This would build the model 'total_duplicate_legend_VERSUS_team_of_interest_no_speed.prism' and verify the first property of the file 'p1vp2_winner_props.props'.
@@ -46,7 +48,7 @@
   prop 3 = deadlock check
 
   Given that the PRISM command line opens on the bin directory of PRISM, it may be useful to insert the models of interest into the PRISM program file folder, and in the command navigate to the files. This would look like:
-  
+
   prism ..\prism-examples\pokemon_new\total_duplicate_legend_VERSUS_team_of_interest_no_speed.prism ..\prism-examples\pokemon_new\p1vp2_winner_props.props -prop 1 -nopre
 
 
