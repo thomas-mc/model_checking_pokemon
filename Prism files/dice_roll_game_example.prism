@@ -1,0 +1,33 @@
+smg
+
+player player1
+	[player1_roll_die], [player1_gamble]
+endplayer
+
+player player2
+	[player2_roll_die], [player2_gamble]
+endplayer
+
+module roll_dice
+
+	player1_die_value : [0..6] init 0;
+	player2_die_value : [0..6] init 0;
+	turn : [1..5] init 1;
+
+	[player1_roll_die] player1_die_value = 0 & turn = 1 -> 1/6 : (player1_die_value' = 1) & (turn' = 2) + 1/6 : (player1_die_value' = 2) & (turn' = 2) + 1/6 : (player1_die_value' = 3) & (turn' = 2) + 1/6 : (player1_die_value' = 4) & (turn' = 2) + 1/6 : (player1_die_value' = 5) & (turn' = 2) + 1/6 : (player1_die_value' = 6) & (turn' = 2);
+
+	[player2_roll_die] player2_die_value = 0 & turn = 2 -> 1/6 : (player2_die_value' = 1) & (turn' = 3) + 1/6 : (player2_die_value' = 2) & (turn' = 3) + 1/6 : (player2_die_value' = 3) & (turn' = 3) + 1/6 : (player2_die_value' = 4) & (turn' = 3) + 1/6 : (player2_die_value' = 5) & (turn' = 3) + 1/6 : (player2_die_value' = 6) & (turn' = 3);
+
+	[player1_gamble] turn = 3 & player1_die_value != 0 & player2_die_value > player1_die_value -> 0.7 : (player1_die_value' = player1_die_value + 1) & (turn' = 4) + 0.3 : (player1_die_value' = max(1, player1_die_value - 2)) & (turn' = 4);
+	
+	[player1_gamble] turn = 3 & player1_die_value != 0 -> (turn' = 4);
+
+	[player2_gamble] turn = 4 & player2_die_value != 0 & player1_die_value > player2_die_value -> 0.7 : (player2_die_value' = max(6, player2_die_value + 3)) & (turn' = 5) + 0.3 : (player2_die_value' = max(1, player2_die_value - 2)) & (turn' = 5);
+
+	[player2_gamble] turn = 4 & player2_die_value != 0 -> (turn' = 5);
+
+endmodule
+
+label "player1_wins" = (turn = 5) & (player1_die_value > player2_die_value);
+label "player2_wins" = (turn = 5) & (player2_die_value > player1_die_value);
+label "draw" = (turn = 5) & (player1_die_value = player2_die_value);

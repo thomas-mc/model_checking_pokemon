@@ -12,4 +12,5 @@
 "Explosion":{"type": "Normal","Power": 170,"Accuracy": 100},
 "Skull Bash":{"type": "Normal","Power": 100,"Accuracy": 100},
 "Mega Kick":{"type": "Normal","Power": 120,"Accuracy": 75},
-"Hydro Pump":{"type": "Normal","Power": 120,"Accuracy": 80}}
+"Hydro Pump":{"type": "Normal","Power": 120,"Accuracy": 80},
+"Solar Beam":{"type": "Grass", "Power": 120, "Accuracy": 100}}

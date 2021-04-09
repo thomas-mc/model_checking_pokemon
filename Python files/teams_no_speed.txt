@@ -1,0 +1,7 @@
+{"best_total_no_speed":["Dragonite", "Cloyster", "Exeggutor"],
+"best_total_no_speed_joint1":["Dragonite", "Cloyster", "Rhydon"],
+"best_total_no_speed_joint2":["Dragonite", "Cloyster", "Snorlax"],
+"total_plus_typeadv_no_speed":["Rhydon", "Cloyster", "Omastar"],
+"total_minus_typedis_no_speed":["Mew", "Dragonite", "Snorlax"],
+"total_duplicate_no_speed":["Dragonite", "Dragonite", "Dragonite"],
+"team_of_interest_no_speed":["Snorlax","Snorlax","Snorlax"]}

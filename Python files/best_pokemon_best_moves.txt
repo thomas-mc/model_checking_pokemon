@@ -9,4 +9,7 @@
 "Jynx":["Blizzard", "Psychic", "Hyper Beam", "Mega Kick"],
 "Zapdos":["Sky Attack", "Thunder", "Hyper Beam", "Double-Edge"],
 "Mew":["Psychic", "Explosion", "Hyper Beam", "Self-Destruct"],
-"Gyarados":["Hydro Pump", "Hyper Beam", "Blizzard", "Fire Blast"]}
+"Gyarados":["Hydro Pump", "Hyper Beam", "Blizzard", "Fire Blast"],
+"Exeggutor":["Psychic", "Solar Beam", "Explosion", "Hyper Beam"],
+"Snorlax":["Hyper Beam", "Self-Destruct", "Solar Beam", "Mega Kick"],
+"Omastar":["Hydro Pump", "Hyper Beam", "Blizzard", "Double-Edge"]}

@@ -1,0 +1,2 @@
+{"total_duplicate_legend":["Mewtwo","Mewtwo","Mewtwo"],
+"team_of_interest_no_speed":["Snorlax","Snorlax","Snorlax"]}

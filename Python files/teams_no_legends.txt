@@ -1,7 +1,7 @@
 {"best_total":["Dragonite","Mew","Cloyster"],
 "best_total_joint":["Dragonite","Mew","Gyarados"],
 "most_type_advantages":["Rhydon","Cloyster","Aerodactyl"],
-"most_type_disadvantages":["Dragonair","Mew","Dragonite"],
+"least_type_disadvantages":["Dragonair","Mew","Dragonite"],
 "typeadv_minus_typedis":["Jynx","Aerodactyl","Rhydon"],
 "type_effect_product":["Dragonite","Aerodactyl","Jynx"],
 "type_effect_sum":["Cloyster","Aerodactyl","Rhydon"],
@@ -10,4 +10,5 @@
 "total_minus_typedis":["Mew","Dragonite","Dragonair"],
 "total_multiplied_typeproduct":["Dragonite","Aerodactyl","Jynx"],
 "total_duplicate":["Mew","Mew","Mew"],
+"total_duplicate_joint":["Dragonite","Dragonite","Dragonite"],
 "type_duplicate":["Aerodactyl","Aerodactyl","Aerodactyl"]}
