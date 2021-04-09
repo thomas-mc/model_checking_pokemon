@@ -4,7 +4,7 @@ import random
 import math
 original_stdout = sys.stdout
 
-with open('University Work\\model_checking_pokemon\\Python files\\teams.txt') as json_file:
+with open('University Work\\model_checking_pokemon\\Python files\\teams_winners.txt') as json_file:
     teams = json.load(json_file)
 
 json_file.close()
